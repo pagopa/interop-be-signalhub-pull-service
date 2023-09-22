@@ -220,10 +220,10 @@
 								<reactive>true</reactive>
 								<skipDefaultInterface>false</skipDefaultInterface>
 								<useTags>true</useTags>
-								<basePackage>${project.groupId}.platform.rest.v1</basePackage>
-								<modelPackage>${project.groupId}.platform.rest.v1.dto</modelPackage>
-								<apiPackage>${project.groupId}.platform.rest.v1.api</apiPackage>
-								<configPackage>${project.groupId}.platform.rest.v1.config</configPackage>
+								<basePackage>${project.groupId}.signalhub.pull.service.rest.v1</basePackage>
+								<modelPackage>${project.groupId}.signalhub.pull.service.rest.v1.dto</modelPackage>
+								<apiPackage>${project.groupId}.signalhub.pull.service.rest.v1.api</apiPackage>
+								<configPackage>${project.groupId}.signalhub.pull.service.rest.v1.config</configPackage>
 							</configOptions>
 						</configuration>
 					</execution>
