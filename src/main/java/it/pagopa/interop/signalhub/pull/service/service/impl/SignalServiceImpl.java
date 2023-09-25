@@ -30,9 +30,16 @@ public class SignalServiceImpl implements SignalService {
 
     @Override
     public Mono<Flux<Signal>> pullSignal(String organizationId, String eServiceId, Long indexSignal) {
+        if(indexSignal==null){
+            indexSignal= Long.valueOf(0);
+        }
+        Long finalIndexSignal = indexSignal;
         return eServiceRepository.findByOrganizationIdAndEServiceId(organizationId, eServiceId)
                 .switchIfEmpty(Mono.error(new PnGenericException(ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND, ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND.getMessage().concat(eServiceId), HttpStatus.FORBIDDEN)))
-                .flatMap(eservice -> signalRepository.findSignal(eServiceId, indexSignal))
+                .flatMap(eservice -> signalRepository.findSignal(eServiceId, finalIndexSignal +1, finalIndexSignal +100))
                 .switchIfEmpty(Mono.error(new PnGenericException(ExceptionTypeEnum.SIGNALID_ALREADY_EXISTS, ExceptionTypeEnum.SIGNALID_ALREADY_EXISTS.getMessage(), HttpStatus.BAD_REQUEST)));
     }
+
+
+
 }
