@@ -43,7 +43,6 @@ paths:
           required: true
           schema:
             type: string
-            format: uuid
         - name: indexSignal
           in: query
           description: signal index from which to search
@@ -220,11 +219,9 @@ components:
           maxLength: 500
         eserviceId:
           type: string
-          format: uuid
           description: eservice Id
         signalId:
           type: string
-          format: uuid
           description: signal id
         indexSignal:
           type: integer

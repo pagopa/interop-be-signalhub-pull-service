@@ -10,7 +10,8 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface SignalRepository extends ReactiveCrudRepository<Signal, Long> {
 
-    @Query("SELECT * FROM Signal WHERE eserviceId = :eserviceId ")
+    @Query("select * from signal s where s.eservice_id= :eserviceId and s.signal_id BETWEEN coalesce(:indexSignal+1, 1) AND coalesce (:indexSignal+100, 100) " +
+            "order by s.signal_id;")
     Mono<Flux<Signal>> findSignal(String eserviceId, Long indexSignal);
 
 }
