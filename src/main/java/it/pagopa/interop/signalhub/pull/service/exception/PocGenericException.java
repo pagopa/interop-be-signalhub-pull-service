@@ -25,11 +25,5 @@ public class PocGenericException extends RuntimeException {
         this.httpStatus = status;
     }
 
-    public PocGenericException(ExceptionTypeEnum exceptionType, String message, Throwable throwable){
-        super(message, throwable);
-        this.exceptionType = exceptionType;
-        this.message = message;
-        this.httpStatus = HttpStatus.INTERNAL_SERVER_ERROR;
-    }
 
 }
