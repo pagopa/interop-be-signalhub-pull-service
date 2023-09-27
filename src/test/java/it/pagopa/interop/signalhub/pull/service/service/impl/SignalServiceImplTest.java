@@ -1,9 +1,11 @@
 package it.pagopa.interop.signalhub.pull.service.service.impl;
 
-import it.pagopa.interop.signalhub.pull.service.entities.EService;
+import it.pagopa.interop.signalhub.pull.service.entities.ConsumerEService;
+import it.pagopa.interop.signalhub.pull.service.entities.SignalEntity;
 import it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum;
-import it.pagopa.interop.signalhub.pull.service.exception.PnGenericException;
-import it.pagopa.interop.signalhub.pull.service.repository.EServiceRepository;
+import it.pagopa.interop.signalhub.pull.service.exception.PocGenericException;
+import it.pagopa.interop.signalhub.pull.service.mapper.SignalMapper;
+import it.pagopa.interop.signalhub.pull.service.repository.ConsumerEserviceRepository;
 import it.pagopa.interop.signalhub.pull.service.repository.SignalRepository;
 import it.pagopa.interop.signalhub.pull.service.rest.v1.dto.Signal;
 import org.junit.jupiter.api.Test;
@@ -24,19 +26,21 @@ public class SignalServiceImplTest {
     private SignalServiceImpl signalService;
 
     @Mock
-    private EServiceRepository eServiceRepository;
+    private ConsumerEserviceRepository consumerEserviceRepository;
     @Mock
     private SignalRepository signalRepository;
+    @Mock
+    private SignalMapper signalMapper;
+
 
 
     @Test
     void whenCallPullSignalAndCorrespondenceNotFound() {
-
-        Mockito.when(eServiceRepository.findByOrganizationIdAndEServiceId(Mockito.any(), Mockito.any())).thenReturn(Mono.empty());
+        Mockito.when(consumerEserviceRepository.findByConsumerIdAndEServiceId(Mockito.any(), Mockito.any())).thenReturn(Mono.empty());
         StepVerifier.create(signalService.pullSignal("1234","1234",1L))
                 .expectErrorMatches((ex) -> {
-            assertTrue(ex instanceof PnGenericException);
-            assertEquals(ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND,((PnGenericException) ex).getExceptionType());
+            assertTrue(ex instanceof PocGenericException);
+            assertEquals(ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND,((PocGenericException) ex).getExceptionType());
             return true;
 
         }).verify();
@@ -45,23 +49,25 @@ public class SignalServiceImplTest {
 
     @Test
     void whenCallPullSignalAndSignalIdAlreadyExists() {
-        Mockito.when(eServiceRepository.findByOrganizationIdAndEServiceId(Mockito.any(), Mockito.any())).thenReturn(Mono.just(new EService()));
-        Mockito.when(signalRepository.findSignal(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Mono.empty());
+        Mockito.when(consumerEserviceRepository.findByConsumerIdAndEServiceId(Mockito.any(), Mockito.any())).thenReturn(Mono.just(new ConsumerEService()));
+        Mockito.when(signalRepository.findSignal(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Flux.empty());
 
         StepVerifier.create(signalService.pullSignal("1234","1234",1L))
                 .expectErrorMatches((ex) -> {
-                    assertTrue(ex instanceof PnGenericException);
-                    assertEquals(ExceptionTypeEnum.SIGNALID_ALREADY_EXISTS, ((PnGenericException) ex).getExceptionType());
+                    assertTrue(ex instanceof PocGenericException);
+                    assertEquals(ExceptionTypeEnum.SIGNALID_ALREADY_EXISTS, ((PocGenericException) ex).getExceptionType());
                     return true;
                 }).verify();
     }
 
     @Test
     void whenCallPushSignalAndSignalIdAlreadyExist() {
-        EService eService= new EService();
-        eService.setEserviceId("123");
-        eService.setOrganizationId("123");
-        Mockito.when(eServiceRepository.findByOrganizationIdAndEServiceId(Mockito.any(), Mockito.any())).thenReturn(Mono.just(eService));
+        SignalEntity signal= new SignalEntity();
+        signal.setSignalId(1L);
+        ConsumerEService consumerEService= new ConsumerEService();
+        consumerEService.setEserviceId("123");
+        consumerEService.setConsumerId("123");
+        Mockito.when(consumerEserviceRepository.findByConsumerIdAndEServiceId(Mockito.any(), Mockito.any())).thenReturn(Mono.just(consumerEService));
 
         assertNotNull(signalService.pullSignal("1234","1234",1L));
     }
