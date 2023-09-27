@@ -141,6 +141,15 @@
 			<version>4.3.0</version>
 		</dependency>
 		<dependency>
+			<groupId>com.auth0</groupId>
+			<artifactId>jwks-rsa</artifactId>
+			<version>0.22.1</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>
 			<scope>runtime</scope>
@@ -232,6 +241,8 @@
 								<reactive>true</reactive>
 								<skipDefaultInterface>false</skipDefaultInterface>
 								<useTags>true</useTags>
+								<modelNameSuffix>Dto</modelNameSuffix>
+
 								<basePackage>${project.groupId}.signalhub.pull.service.rest.v1</basePackage>
 								<modelPackage>${project.groupId}.signalhub.pull.service.rest.v1.dto</modelPackage>
 								<apiPackage>${project.groupId}.signalhub.pull.service.rest.v1.api</apiPackage>

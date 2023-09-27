@@ -3,6 +3,7 @@ package it.pagopa.interop.signalhub.pull.service.utils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import reactor.core.publisher.Mono;
 
 @Slf4j
@@ -12,12 +13,9 @@ public class Utility {
         // private constructor
     }
 
-    public static Mono<String> getFromContext(String key, String defaultValue){
-        return Mono.deferContextual(ctx -> {
-            String value = ctx.getOrDefault(key, defaultValue);
-            if (value == null) return Mono.empty();
-            return Mono.just(value);
-        });
+    public static Mono<String> getPrincipalFromSecurityContext(){
+        return ReactiveSecurityContextHolder.getContext()
+                .map(securityContext -> (String) securityContext.getAuthentication().getPrincipal());
     }
 
     public static <T> T jsonToObject(ObjectMapper objectMapper, String json, Class<T> tClass){

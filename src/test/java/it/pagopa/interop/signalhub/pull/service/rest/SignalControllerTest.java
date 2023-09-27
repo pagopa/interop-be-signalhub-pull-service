@@ -30,7 +30,7 @@ class SignalControllerTest {
         Signal signalResponse= new Signal();
         String path = "/pull-signal";
         Mockito.when(signalService.pullSignal(Mockito.any(), Mockito.any(), Mockito.any()))
-                .thenReturn(Mono.just(Flux.just(new Signal())));
+                .thenReturn(Flux.just(new Signal()));
 
         webTestClient.post()
                 .uri(uriBuilder -> uriBuilder.path(path)

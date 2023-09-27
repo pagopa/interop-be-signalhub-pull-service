@@ -14,15 +14,15 @@ import java.sql.Timestamp;
 @Getter
 @Setter
 @ToString
-@Table("ORGANIZATION_ESERVICE")
-public class EService implements Serializable {
+@Table("consumer_eservice")
+public class ConsumerEService implements Serializable {
 
     @Id
     @Column("eservice_id")
     private String eserviceId;
 
-    @Column("organization_id")
-    private String organizationId;
+    @Column("consumer_id")
+    private String consumerId;
 
     @Column("state")
     private String state;
