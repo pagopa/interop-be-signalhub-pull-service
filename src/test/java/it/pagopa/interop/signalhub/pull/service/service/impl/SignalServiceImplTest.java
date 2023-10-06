@@ -5,9 +5,8 @@ import it.pagopa.interop.signalhub.pull.service.entities.SignalEntity;
 import it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum;
 import it.pagopa.interop.signalhub.pull.service.exception.PocGenericException;
 import it.pagopa.interop.signalhub.pull.service.mapper.SignalMapper;
-import it.pagopa.interop.signalhub.pull.service.repository.ConsumerEserviceRepository;
+import it.pagopa.interop.signalhub.pull.service.repository.ConsumerEServiceRepository;
 import it.pagopa.interop.signalhub.pull.service.repository.SignalRepository;
-import it.pagopa.interop.signalhub.pull.service.rest.v1.dto.Signal;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -26,7 +25,7 @@ public class SignalServiceImplTest {
     private SignalServiceImpl signalService;
 
     @Mock
-    private ConsumerEserviceRepository consumerEserviceRepository;
+    private ConsumerEServiceRepository consumerEserviceRepository;
     @Mock
     private SignalRepository signalRepository;
     @Mock

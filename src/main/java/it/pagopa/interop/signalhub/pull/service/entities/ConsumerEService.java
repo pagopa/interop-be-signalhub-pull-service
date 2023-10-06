@@ -16,6 +16,11 @@ import java.sql.Timestamp;
 @ToString
 @Table("consumer_eservice")
 public class ConsumerEService implements Serializable {
+    public static final String COLUMN_ESERVICE_ID = "eservice_id";
+    public static final String COLUMN_CONSUMER_ID = "consumer_id";
+    public static final String COLUMN_STATE = "state";
+    public static final String COLUMN_DATE_INSERT = "tmst_insert";
+    public static final String COLUMN_DATE_UPDATE = "tmst_last_edit";
 
     @Id
     @Column("eservice_id")

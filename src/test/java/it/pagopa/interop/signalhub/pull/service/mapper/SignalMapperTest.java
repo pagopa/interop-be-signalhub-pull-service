@@ -5,10 +5,8 @@ import it.pagopa.interop.signalhub.pull.service.rest.v1.dto.Signal;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mapstruct.factory.Mappers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.time.Instant;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -23,7 +21,7 @@ class SignalMapperTest {
         SignalEntity signal1= new SignalEntity();
         signal1.setSignalId(1L);
         Signal signal= service.toDto(signal1);
-        assertEquals(signal.getIndexSignal().toString(), signal.getSignalId() );
+        assertEquals(signal.getIndexSignal(), signal1.getSignalId() );
     }
 
     @Test
