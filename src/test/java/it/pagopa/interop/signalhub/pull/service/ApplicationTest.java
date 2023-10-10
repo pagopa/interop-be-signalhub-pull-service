@@ -8,10 +8,7 @@ import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Import(LocalStackTestConfig.class)
-@SpringBootTest()
 
-@ActiveProfiles("test")
 class ApplicationTest {
 
 

@@ -6,6 +6,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.google.common.net.HttpHeaders;
+import it.pagopa.interop.signalhub.pull.service.exception.JWTException;
 import it.pagopa.interop.signalhub.pull.service.exception.PocGenericException;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -57,10 +58,9 @@ public class JWTUtil {
             JWTVerifier jwtVerifier = JWT.require(Algorithm.RSA256((RSAPublicKey) key, null))
                     .build();
             try {
-                //return jwtVerifier.verify(jwt);
-                return jwt;
+                return jwtVerifier.verify(jwt);
             } catch (JWTVerificationException ex) {
-                throw new PocGenericException(JWT_NOT_VALID, ex.getMessage(), HttpStatus.UNAUTHORIZED);
+                throw new JWTException(JWT_NOT_VALID, ex.getMessage(), HttpStatus.UNAUTHORIZED, jwt.getToken());
             }
         };
     }

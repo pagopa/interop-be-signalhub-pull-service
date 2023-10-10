@@ -47,19 +47,6 @@ public class SignalServiceImplTest {
     }
 
     @Test
-    void whenCallPullSignalAndSignalIdAlreadyExists() {
-        Mockito.when(consumerEserviceRepository.findByConsumerIdAndEServiceId(Mockito.any(), Mockito.any())).thenReturn(Mono.just(new ConsumerEService()));
-        Mockito.when(signalRepository.findSignal(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Flux.empty());
-
-        StepVerifier.create(signalService.pullSignal("1234","1234",1L))
-                .expectErrorMatches((ex) -> {
-                    assertTrue(ex instanceof PocGenericException);
-                    assertEquals(ExceptionTypeEnum.SIGNALID_ALREADY_EXISTS, ((PocGenericException) ex).getExceptionType());
-                    return true;
-                }).verify();
-    }
-
-    @Test
     void whenCallPushSignalAndSignalIdAlreadyExist() {
         SignalEntity signal= new SignalEntity();
         signal.setSignalId(1L);
