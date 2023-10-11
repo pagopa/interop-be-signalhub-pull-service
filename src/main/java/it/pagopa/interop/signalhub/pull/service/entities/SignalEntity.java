@@ -21,6 +21,8 @@ public class SignalEntity {
     private Long id;
     @Column("signal_id")
     private Long signalId;
+    @Column("correlation_id")
+    private String correlationId;
     @Column("object_id")
     private String objectId;
     @Column("eservice_id")
