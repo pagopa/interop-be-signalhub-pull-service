@@ -50,10 +50,11 @@ public class JWTFilter implements WebFilter {
     @Autowired
     private JWTRepository jwtRepository;
 
-
-
     @Override
     public Mono<Void> filter(ServerWebExchange exchangeRequest, @NotNull WebFilterChain chain) {
+        if (exchangeRequest.getRequest().getHeaders().get("Authorization") == null) {
+            return chain.filter(exchangeRequest);
+        }
 
         return Mono.justOrEmpty(exchangeRequest)
                 .doOnNext(exchange -> log.info("Start JWT filter validation"))
@@ -70,8 +71,6 @@ public class JWTFilter implements WebFilter {
                 })
                 .doOnNext(jwt -> log.info("JWT is valid"))
                 .flatMap(token -> authenticate(exchangeRequest, chain, token));
-
-
     }
 
     private Mono<Void> authenticate(ServerWebExchange exchange,
