@@ -8,7 +8,7 @@ import it.pagopa.interop.signalhub.pull.service.auth.JWTAuthManager;
 import it.pagopa.interop.signalhub.pull.service.auth.JWTConverter;
 import it.pagopa.interop.signalhub.pull.service.auth.JWTUtil;
 import it.pagopa.interop.signalhub.pull.service.exception.JWTException;
-import it.pagopa.interop.signalhub.pull.service.exception.PocGenericException;
+import it.pagopa.interop.signalhub.pull.service.exception.PDNDGenericException;
 import it.pagopa.interop.signalhub.pull.service.repository.JWTRepository;
 import it.pagopa.interop.signalhub.pull.service.repository.cache.model.JWTCache;
 import lombok.extern.slf4j.Slf4j;
@@ -66,7 +66,7 @@ public class JWTFilter implements WebFilter {
                 .onErrorResume(JWTException.class, ex -> {
                     log.info("{}, JWT CHE SALVO ", ex.getJwt());
                     return jwtRepository.saveOnCache(new JWTCache(ex.getJwt()))
-                            .flatMap(item -> Mono.error(new PocGenericException(ex.getExceptionType(), ex.getMessage(), ex.getHttpStatus())));
+                            .flatMap(item -> Mono.error(new PDNDGenericException(ex.getExceptionType(), ex.getMessage(), ex.getHttpStatus())));
                 })
                 .doOnNext(jwt -> log.info("JWT is valid"))
                 .flatMap(token -> authenticate(exchangeRequest, chain, token));

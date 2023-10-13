@@ -1,7 +1,7 @@
 package it.pagopa.interop.signalhub.pull.service.service.impl;
 
 import it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum;
-import it.pagopa.interop.signalhub.pull.service.exception.PocGenericException;
+import it.pagopa.interop.signalhub.pull.service.exception.PDNDGenericException;
 import it.pagopa.interop.signalhub.pull.service.mapper.SignalMapper;
 import it.pagopa.interop.signalhub.pull.service.repository.ConsumerEServiceRepository;
 import it.pagopa.interop.signalhub.pull.service.repository.SignalRepository;
@@ -29,7 +29,7 @@ public class SignalServiceImpl implements SignalService {
         long start = finalIndexSignal+1;
         long end = finalIndexSignal+100;
         return consumerEserviceRepository.findByConsumerIdAndEServiceId("123", eServiceId)
-                .switchIfEmpty(Mono.error(new PocGenericException(ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND, ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND.getMessage().concat(eServiceId), HttpStatus.FORBIDDEN)))
+                .switchIfEmpty(Mono.error(new PDNDGenericException(ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND, ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND.getMessage().concat(eServiceId), HttpStatus.FORBIDDEN)))
                 .doOnNext(eService -> log.info("Faccio una ricerca tra {} - {}", start, end))
                 .flatMapMany(eservice -> signalRepository.findSignal(eServiceId, start, end))
                 .map(signalMapper::toDto);

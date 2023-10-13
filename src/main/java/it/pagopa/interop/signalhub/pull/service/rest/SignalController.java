@@ -1,6 +1,6 @@
 package it.pagopa.interop.signalhub.pull.service.rest;
 
-import it.pagopa.interop.signalhub.pull.service.exception.PocGenericException;
+import it.pagopa.interop.signalhub.pull.service.exception.PDNDGenericException;
 import it.pagopa.interop.signalhub.pull.service.rest.v1.api.GatewayApi;
 import it.pagopa.interop.signalhub.pull.service.rest.v1.dto.Signal;
 import it.pagopa.interop.signalhub.pull.service.service.SignalService;
@@ -24,7 +24,7 @@ public class SignalController implements GatewayApi {
     @Override
     public Mono<ResponseEntity<Flux<Signal>>> getRequest(String eserviceId, java.lang.Long indexSignal, ServerWebExchange exchange) {
         return Utility.getPrincipalFromSecurityContext()
-                .switchIfEmpty(Mono.error(new PocGenericException(NO_AUTH_FOUNDED, NO_AUTH_FOUNDED.getMessage(), HttpStatus.UNAUTHORIZED)))
+                .switchIfEmpty(Mono.error(new PDNDGenericException(NO_AUTH_FOUNDED, NO_AUTH_FOUNDED.getMessage(), HttpStatus.UNAUTHORIZED)))
                 .map(consumerId ->
                         ResponseEntity.status(HttpStatus.OK)
                                 .body(this.signalService.pullSignal(consumerId, eserviceId, indexSignal))
