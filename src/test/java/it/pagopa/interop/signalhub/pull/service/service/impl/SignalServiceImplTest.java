@@ -3,7 +3,7 @@ package it.pagopa.interop.signalhub.pull.service.service.impl;
 import it.pagopa.interop.signalhub.pull.service.entities.ConsumerEService;
 import it.pagopa.interop.signalhub.pull.service.entities.SignalEntity;
 import it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum;
-import it.pagopa.interop.signalhub.pull.service.exception.PocGenericException;
+import it.pagopa.interop.signalhub.pull.service.exception.PDNDGenericException;
 import it.pagopa.interop.signalhub.pull.service.mapper.SignalMapper;
 import it.pagopa.interop.signalhub.pull.service.repository.ConsumerEServiceRepository;
 import it.pagopa.interop.signalhub.pull.service.repository.SignalRepository;
@@ -13,7 +13,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -38,8 +37,8 @@ public class SignalServiceImplTest {
         Mockito.when(consumerEserviceRepository.findByConsumerIdAndEServiceId(Mockito.any(), Mockito.any())).thenReturn(Mono.empty());
         StepVerifier.create(signalService.pullSignal("1234","1234",1L))
                 .expectErrorMatches((ex) -> {
-            assertTrue(ex instanceof PocGenericException);
-            assertEquals(ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND,((PocGenericException) ex).getExceptionType());
+            assertTrue(ex instanceof PDNDGenericException);
+            assertEquals(ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND,((PDNDGenericException) ex).getExceptionType());
             return true;
 
         }).verify();

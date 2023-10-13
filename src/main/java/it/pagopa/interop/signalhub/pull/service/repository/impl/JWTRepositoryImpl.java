@@ -1,7 +1,7 @@
 package it.pagopa.interop.signalhub.pull.service.repository.impl;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import it.pagopa.interop.signalhub.pull.service.exception.PocGenericException;
+import it.pagopa.interop.signalhub.pull.service.exception.PDNDGenericException;
 import it.pagopa.interop.signalhub.pull.service.repository.JWTRepository;
 import it.pagopa.interop.signalhub.pull.service.repository.cache.model.JWTCache;
 import it.pagopa.interop.signalhub.pull.service.repository.cache.repository.JWTCacheRepository;
@@ -26,7 +26,7 @@ public class JWTRepositoryImpl implements JWTRepository {
 
         return this.cacheRepository.findById(jwt.getToken())
                 .doOnNext(cache -> log.info("[{}] JWT in cache", jwt.getToken()))
-                .flatMap(jwtCache -> Mono.error(new PocGenericException(JWT_NOT_VALID, JWT_NOT_VALID.getMessage(), HttpStatus.UNAUTHORIZED)))
+                .flatMap(jwtCache -> Mono.error(new PDNDGenericException(JWT_NOT_VALID, JWT_NOT_VALID.getMessage(), HttpStatus.UNAUTHORIZED)))
                 .switchIfEmpty(Mono.defer(() -> {
                     log.info("[{}] JWT no in cache", jwt.getToken());
                     return Mono.just(jwt);

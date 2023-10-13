@@ -9,8 +9,8 @@ class PocGenericExceptionTest {
 
     @Test
     void getMessage() {
-        assertDoesNotThrow(() -> new PocGenericException(ExceptionTypeEnum.SIGNALID_ALREADY_EXISTS, "message"));
-        assertDoesNotThrow(() -> new PocGenericException(ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND, "message", HttpStatus.MULTI_STATUS));
+        assertDoesNotThrow(() -> new PDNDGenericException(ExceptionTypeEnum.SIGNALID_ALREADY_EXISTS, "message"));
+        assertDoesNotThrow(() -> new PDNDGenericException(ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND, "message", HttpStatus.MULTI_STATUS));
 
     }
 
