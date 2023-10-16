@@ -23,7 +23,7 @@ public class SecurityWebFluxConfig {
         http.csrf().disable();
 
         http.authorizeExchange()
-                .pathMatchers("/actuator/health")
+                .pathMatchers("/actuator/health/**")
                 .permitAll()
                 .and()
                 .addFilterAt(jwtFilter, SecurityWebFiltersOrder.FIRST)
