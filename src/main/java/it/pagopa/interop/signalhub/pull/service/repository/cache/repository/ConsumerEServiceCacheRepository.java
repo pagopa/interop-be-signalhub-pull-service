@@ -5,7 +5,6 @@ import it.pagopa.interop.signalhub.pull.service.repository.cache.model.ConsumerE
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.ReactiveRedisOperations;
 import org.springframework.stereotype.Repository;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
 import java.util.function.Predicate;
@@ -16,12 +15,9 @@ import java.util.function.Predicate;
 public class ConsumerEServiceCacheRepository {
     private final ReactiveRedisOperations<String, ConsumerEServiceCache> reactiveRedisOperations;
 
-    private Flux<ConsumerEServiceCache> findAll(){
-        return this.reactiveRedisOperations.opsForList().range("consumer_eservice", 0, -1);
-    }
 
     public Mono<ConsumerEServiceCache> findById(String consumer, String eservice) {
-        return this.findAll()
+        return this.reactiveRedisOperations.opsForList().range(eservice.concat("-").concat(consumer), 0, -1)
                 .filter(correctEservice(consumer, eservice))
                 .collectList()
                 .flatMap(finded -> {
@@ -31,13 +27,13 @@ public class ConsumerEServiceCacheRepository {
     }
 
 
-    public Mono<ConsumerEServiceCache> save(ConsumerEServiceCache eservice){
-        return this.reactiveRedisOperations.opsForList().rightPush("consumer_eservice", eservice).thenReturn(eservice);
+    public Mono<ConsumerEServiceCache> save(ConsumerEServiceCache consumerEServiceCache){
+        return this.reactiveRedisOperations.opsForList().rightPush(consumerEServiceCache.getEserviceId().concat("-").concat(consumerEServiceCache.getConsumerId()), consumerEServiceCache).thenReturn(consumerEServiceCache);
     }
 
     private Predicate<ConsumerEServiceCache> correctEservice(String consumerId, String eserviceId){
-        return eservice -> eservice.getEserviceId().equals(eserviceId) &&
-                                eservice.getConsumerId().equals(consumerId);
+        return consumerEServiceCache -> consumerEServiceCache.getEserviceId().equals(eserviceId) &&
+                consumerEServiceCache.getConsumerId().equals(consumerId);
     }
 
 
