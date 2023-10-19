@@ -3,9 +3,9 @@ package it.pagopa.interop.signalhub.pull.service.exception;
 import org.junit.jupiter.api.Test;
 import org.springframework.http.HttpStatus;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
-class PocGenericExceptionTest {
+class PDNDGenericExceptionTest {
 
     @Test
     void getMessage() {
