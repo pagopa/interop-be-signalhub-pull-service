@@ -22,7 +22,7 @@ public class SignalController implements GatewayApi {
     private SignalService signalService;
 
     @Override
-    public Mono<ResponseEntity<Flux<Signal>>> getRequest(String eserviceId, java.lang.Long indexSignal, ServerWebExchange exchange) {
+    public Mono<ResponseEntity<Flux<Signal>>> getRequest(String eserviceId, Long indexSignal, ServerWebExchange exchange) {
         return Utility.getPrincipalFromSecurityContext()
                 .switchIfEmpty(Mono.error(new PDNDGenericException(NO_AUTH_FOUNDED, NO_AUTH_FOUNDED.getMessage(), HttpStatus.UNAUTHORIZED)))
                 .map(consumerId ->

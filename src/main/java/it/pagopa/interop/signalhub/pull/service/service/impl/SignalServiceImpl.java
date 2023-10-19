@@ -24,11 +24,11 @@ public class SignalServiceImpl implements SignalService {
     private SignalMapper signalMapper;
 
     @Override
-    public Flux<Signal> pullSignal(String consumer, String eServiceId, Long indexSignal) {
+    public Flux<Signal> pullSignal(String consumerId, String eServiceId, Long indexSignal) {
         long finalIndexSignal = indexSignal;
         long start = finalIndexSignal+1;
         long end = finalIndexSignal+100;
-        return consumerEserviceRepository.findByConsumerIdAndEServiceId("123", eServiceId)
+        return consumerEserviceRepository.findByConsumerIdAndEServiceId(consumerId, eServiceId)
                 .switchIfEmpty(Mono.error(new PDNDGenericException(ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND, ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND.getMessage().concat(eServiceId), HttpStatus.FORBIDDEN)))
                 .doOnNext(eService -> log.info("Faccio una ricerca tra {} - {}", start, end))
                 .flatMapMany(eservice -> signalRepository.findSignal(eServiceId, start, end))

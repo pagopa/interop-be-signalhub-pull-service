@@ -7,7 +7,6 @@ import org.springframework.data.redis.core.ReactiveRedisOperations;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
-import java.util.function.Predicate;
 
 
 @Repository
@@ -17,23 +16,14 @@ public class ConsumerEServiceCacheRepository {
 
 
     public Mono<ConsumerEServiceCache> findById(String consumer, String eservice) {
-        return this.reactiveRedisOperations.opsForList().range(eservice.concat("-").concat(consumer), 0, -1)
-                .filter(correctEservice(consumer, eservice))
-                .collectList()
-                .flatMap(finded -> {
-                    if (finded.isEmpty()) return Mono.empty();
-                    return Mono.just(finded.get(finded.size()-1));
-                });
+        return this.reactiveRedisOperations.opsForValue().get(eservice.concat("-").concat(consumer));
     }
 
 
     public Mono<ConsumerEServiceCache> save(ConsumerEServiceCache consumerEServiceCache){
-        return this.reactiveRedisOperations.opsForList().rightPush(consumerEServiceCache.getEserviceId().concat("-").concat(consumerEServiceCache.getConsumerId()), consumerEServiceCache).thenReturn(consumerEServiceCache);
-    }
-
-    private Predicate<ConsumerEServiceCache> correctEservice(String consumerId, String eserviceId){
-        return consumerEServiceCache -> consumerEServiceCache.getEserviceId().equals(eserviceId) &&
-                consumerEServiceCache.getConsumerId().equals(consumerId);
+        return this.reactiveRedisOperations.opsForValue()
+                .set(consumerEServiceCache.getEserviceId().concat("-").concat(consumerEServiceCache.getConsumerId()), consumerEServiceCache)
+                .thenReturn(consumerEServiceCache);
     }
 
 
