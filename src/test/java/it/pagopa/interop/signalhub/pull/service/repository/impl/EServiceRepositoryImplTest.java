@@ -1,9 +1,6 @@
 package it.pagopa.interop.signalhub.pull.service.repository.impl;
 
-import it.pagopa.interop.signalhub.pull.service.entities.ConsumerEService;
-import it.pagopa.interop.signalhub.pull.service.mapper.ConsumerEServiceMapper;
-import it.pagopa.interop.signalhub.pull.service.repository.cache.model.ConsumerEServiceCache;
-import it.pagopa.interop.signalhub.pull.service.repository.cache.repository.ConsumerEServiceCacheRepository;
+import it.pagopa.interop.signalhub.pull.service.entities.EService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,44 +17,24 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 class EServiceRepositoryImplTest {
 
     @InjectMocks
-    private ConsumerEServiceRepositoryImpl consumerEServiceRepository;
-
-    @Mock
-    private ConsumerEServiceCacheRepository cacheRepository;
-
-    @Mock
-    private ConsumerEServiceMapper mapper;
+    private EServiceRepositoryImpl eServiceRepositoryimpl;
 
     @Mock
     private R2dbcEntityTemplate template;
 
     @Test
-    void findByProducerIdAndEServiceIdButNotExists() {
-        Mockito.when(cacheRepository.findById(Mockito.any(), Mockito.any())).thenReturn(Mono.empty());
+    void checkEServiceStatusAndEServiceIdButNotExists() {
         Mockito.when(template.selectOne(Mockito.any(), Mockito.any())).thenReturn(Mono.empty());
-        assertNull(consumerEServiceRepository.findByConsumerIdAndEServiceId("123", "123").block());
+        assertNull(eServiceRepositoryimpl.checkEServiceStatus("123").block());
     }
 
     @Test
     void findByPbroducerIdAndEServiceIdAndFoundedInCache() {
-        ConsumerEService eService= new ConsumerEService();
+        EService eService= new EService();
         eService.setEserviceId("123");
-        eService.setConsumerId("123");
-        ConsumerEServiceCache eServiceCache= new ConsumerEServiceCache();
-        eServiceCache.setEserviceId("123");
-        eServiceCache.setConsumerId("123");
-        Mockito.when(cacheRepository.findById(Mockito.any(), Mockito.any())).thenReturn(Mono.just(eServiceCache));
-        Mockito.when(mapper.toEntity(Mockito.any())).thenReturn(eService);
-        Mockito.when(template.selectOne(Mockito.any(), Mockito.any())).thenReturn(Mono.empty());
-        assertNotNull(consumerEServiceRepository.findByConsumerIdAndEServiceId("123", "123").block());
+        Mockito.when(template.selectOne(Mockito.any(), Mockito.any())).thenReturn(Mono.just(new EService()));
+        assertNotNull(eServiceRepositoryimpl.checkEServiceStatus("123").block());
     }
 
-    @Test
-    void findByPbroducerIdAndEServiceIdButNotFoundInCache() {
-        Mockito.when(cacheRepository.findById(Mockito.any(), Mockito.any())).thenReturn(Mono.empty());
-        Mockito.when(template.selectOne(Mockito.any(), Mockito.any())).thenReturn(Mono.just(new ConsumerEService()));
-        Mockito.when(cacheRepository.save(Mockito.any())).thenReturn(Mono.just(new ConsumerEServiceCache()));
-        Mockito.when(mapper.toEntity(Mockito.any())).thenReturn(new ConsumerEService());
-        assertNotNull(consumerEServiceRepository.findByConsumerIdAndEServiceId("123", "123").block());
-    }
+
 }

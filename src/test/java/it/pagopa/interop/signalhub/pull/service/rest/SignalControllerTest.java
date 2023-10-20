@@ -28,7 +28,7 @@ class SignalControllerTest extends BaseTest.WithWebEnvironment {
 
     @Test
     @WithMockCustomUser
-    void pushSignal() {
+    void pullSignal() {
         String path = "/pull-signal/123";
         Mockito.when(signalService.pullSignal(Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(Flux.just(new Signal()));

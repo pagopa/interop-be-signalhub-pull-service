@@ -3,6 +3,7 @@ package it.pagopa.interop.signalhub.pull.service.repository.impl;
 import it.pagopa.interop.signalhub.pull.service.entities.ConsumerEService;
 import it.pagopa.interop.signalhub.pull.service.mapper.ConsumerEServiceMapper;
 import it.pagopa.interop.signalhub.pull.service.repository.ConsumerEServiceRepository;
+import it.pagopa.interop.signalhub.pull.service.repository.EServiceRepository;
 import it.pagopa.interop.signalhub.pull.service.repository.cache.repository.ConsumerEServiceCacheRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
