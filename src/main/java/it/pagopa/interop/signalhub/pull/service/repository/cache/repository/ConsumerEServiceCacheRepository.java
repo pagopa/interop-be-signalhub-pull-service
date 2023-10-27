@@ -18,14 +18,14 @@ public class ConsumerEServiceCacheRepository {
 
     public Mono<ConsumerEServiceCache> findById(String eserviceId, String consumerId) {
         return this.reactiveRedisOperations.opsForList()
-                .indexOf(eserviceId, getEserviceForSearching(eserviceId, consumerId))
-                .flatMap(index -> this.reactiveRedisOperations.opsForList().index(eserviceId, index));
+                .indexOf(eserviceId.concat("-").concat(consumerId), getEserviceForSearching(eserviceId, consumerId))
+                .flatMap(index -> this.reactiveRedisOperations.opsForList().index(eserviceId.concat("-").concat(consumerId), index));
     }
 
 
     public Mono<ConsumerEServiceCache> save(ConsumerEServiceCache consumerEServiceCache){
         return this.reactiveRedisOperations.opsForList()
-                .leftPush(consumerEServiceCache.getEserviceId(), consumerEServiceCache)
+                .leftPush(consumerEServiceCache.getEserviceId().concat("-").concat(consumerEServiceCache.getConsumerId()), consumerEServiceCache)
                 .switchIfEmpty(Mono.defer(() -> {
                     log.info("[{}-{}] EService not saved on cache", consumerEServiceCache.getEserviceId(), consumerEServiceCache.getConsumerId());
                     return Mono.empty();
