@@ -6,8 +6,7 @@ import reactor.core.publisher.Mono;
 
 public interface EServiceRepository {
 
-
-    Mono<EService> checkEServiceStatus(String eserviceId);
+    Mono<EService> checkEServiceStatus(String eserviceId, String descriptorId);
 
 }
 

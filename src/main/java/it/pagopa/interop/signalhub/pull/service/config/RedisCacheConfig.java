@@ -1,6 +1,7 @@
 package it.pagopa.interop.signalhub.pull.service.config;
 
 import it.pagopa.interop.signalhub.pull.service.repository.cache.model.ConsumerEServiceCache;
+import it.pagopa.interop.signalhub.pull.service.repository.cache.model.EServiceCache;
 import it.pagopa.interop.signalhub.pull.service.repository.cache.model.JWTCache;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
@@ -26,6 +27,18 @@ public class RedisCacheConfig {
         RedisSerializationContext<String, ConsumerEServiceCache> context =
                 builder.value(valueSerializer).build();
        return new ReactiveRedisTemplate<>(factory, context);
+    }
+
+    @Bean
+    public ReactiveRedisTemplate<String, EServiceCache> reactiveRedisTemplateE(ReactiveRedisConnectionFactory factory) {
+        StringRedisSerializer keySerializer = new StringRedisSerializer();
+        Jackson2JsonRedisSerializer<EServiceCache> valueSerializer =
+                new Jackson2JsonRedisSerializer<>(EServiceCache.class);
+        RedisSerializationContext.RedisSerializationContextBuilder<String, EServiceCache> builder =
+                RedisSerializationContext.newSerializationContext(keySerializer);
+        RedisSerializationContext<String, EServiceCache> context =
+                builder.value(valueSerializer).build();
+        return new ReactiveRedisTemplate<>(factory, context);
     }
 
     @Bean

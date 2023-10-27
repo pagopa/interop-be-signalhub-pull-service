@@ -17,6 +17,7 @@ import java.sql.Timestamp;
 public class EService {
     public static final String COLUMN_ESERVICE_ID = "eservice_id";
     public static final String COLUMN_PRODUCER_ID = "producer_id";
+    public static final String COLUMN_DESCRIPTOR_ID = "descriptor_id";
     public static final String COLUMN_STATE = "state";
     public static final String COLUMN_DATE_INSERT = "tmst_insert";
     public static final String COLUMN_DATE_UPDATE = "tmst_last_edit";
@@ -27,6 +28,9 @@ public class EService {
 
     @Column(COLUMN_PRODUCER_ID)
     private String producerId;
+
+    @Column(COLUMN_DESCRIPTOR_ID)
+    private String descriptorId;
 
     @Column(COLUMN_STATE)
     private String state;

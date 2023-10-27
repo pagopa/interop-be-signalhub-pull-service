@@ -25,20 +25,19 @@ public class ConsumerEServiceRepositoryImpl implements ConsumerEServiceRepositor
     private final ConsumerEServiceMapper mapper;
 
     @Override
-    public Mono<ConsumerEService> findByConsumerIdAndEServiceId(String consumerId, String eserviceId) {
+    public Mono<ConsumerEService> findByConsumerIdAndEServiceId( String eserviceId, String consumerId ) {
 
-        return this.cacheRepository.findById(consumerId, eserviceId)
+        return this.cacheRepository.findById( eserviceId, consumerId )
                 .doOnNext(cache -> log.info("[{}-{}] ConsumerEService in cache", consumerId, eserviceId))
                 .switchIfEmpty(Mono.defer(() -> {
                     log.info("[{}-{}] ConsumerEService no in cache", consumerId, eserviceId);
                     return Mono.empty();
                 }))
                 .map(mapper::toEntity)
-                .switchIfEmpty(getFromDbAndSaveOnCache(consumerId, eserviceId));
-
+                .switchIfEmpty(getFromDbAndSaveOnCache(eserviceId, consumerId));
     }
 
-    private Mono<ConsumerEService> getFromDbAndSaveOnCache(String consumerId, String eserviceId){
+    private Mono<ConsumerEService> getFromDbAndSaveOnCache(String eserviceId, String consumerId){
         Query equals = Query.query(
                 where(ConsumerEService.COLUMN_CONSUMER_ID).is(consumerId)
                         .and(where(ConsumerEService.COLUMN_ESERVICE_ID).is(eserviceId))
@@ -52,9 +51,6 @@ public class ConsumerEServiceRepositoryImpl implements ConsumerEServiceRepositor
                         log.info("[{}-{}] ConsumerEService founded into DB", consumerId, eserviceId)
                 )
                 .flatMap(entity -> this.cacheRepository.save(mapper.toCache(entity)))
-                .doOnNext(cacheEntity ->
-                        log.info("[{}-{}] ConsumerEService saved on cache", consumerId, eserviceId)
-                )
                 .map(mapper::toEntity);
     }
 }

@@ -18,24 +18,28 @@ import java.sql.Timestamp;
 public class ConsumerEService implements Serializable {
     public static final String COLUMN_ESERVICE_ID = "eservice_id";
     public static final String COLUMN_CONSUMER_ID = "consumer_id";
+    public static final String COLUMN_DESCRIPTOR_ID = "descriptor_id";
     public static final String COLUMN_STATE = "state";
     public static final String COLUMN_DATE_INSERT = "tmst_insert";
     public static final String COLUMN_DATE_UPDATE = "tmst_last_edit";
 
     @Id
-    @Column("eservice_id")
+    @Column(COLUMN_ESERVICE_ID)
     private String eserviceId;
 
-    @Column("consumer_id")
+    @Column(COLUMN_CONSUMER_ID)
     private String consumerId;
 
-    @Column("state")
+    @Column(COLUMN_DESCRIPTOR_ID)
+    private String descriptorId;
+
+    @Column(COLUMN_STATE)
     private String state;
 
-    @Column("tmst_insert")
+    @Column(COLUMN_DATE_INSERT)
     private Timestamp tmstInsert;
 
-    @Column("tmst_last_edit")
+    @Column(COLUMN_DATE_UPDATE)
     private Timestamp tmstLastEdit;
 
 }

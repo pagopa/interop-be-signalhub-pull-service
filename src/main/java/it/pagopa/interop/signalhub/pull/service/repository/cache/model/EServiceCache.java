@@ -4,7 +4,6 @@ package it.pagopa.interop.signalhub.pull.service.repository.cache.model;
 import lombok.*;
 import org.springframework.data.redis.core.RedisHash;
 
-import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.Objects;
 
@@ -14,10 +13,10 @@ import java.util.Objects;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@RedisHash("consumer_eservice")
-public class ConsumerEServiceCache implements Serializable {
+@RedisHash("eservices")
+public class EServiceCache {
     private String eserviceId;
-    private String consumerId;
+    private String producerId;
     private String descriptorId;
     private String state;
     private Timestamp tmstInsert;
@@ -28,12 +27,12 @@ public class ConsumerEServiceCache implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ConsumerEServiceCache that = (ConsumerEServiceCache) o;
-        return Objects.equals(eserviceId, that.eserviceId) && Objects.equals(consumerId, that.consumerId) && Objects.equals(descriptorId, that.descriptorId);
+        EServiceCache that = (EServiceCache) o;
+        return Objects.equals(eserviceId, that.eserviceId) && Objects.equals(producerId, that.producerId) && Objects.equals(descriptorId, that.descriptorId);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(eserviceId, consumerId, descriptorId);
+        return Objects.hash(eserviceId, producerId, descriptorId);
     }
 }

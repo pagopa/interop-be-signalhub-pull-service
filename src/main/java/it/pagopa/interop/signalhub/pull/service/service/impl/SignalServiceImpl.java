@@ -32,10 +32,9 @@ public class SignalServiceImpl implements SignalService {
         long finalIndexSignal = indexSignal;
         long start = finalIndexSignal+1;
         long end = finalIndexSignal+100;
-        return consumerEserviceRepository.findByConsumerIdAndEServiceId(consumerId, eServiceId)
+        return consumerEserviceRepository.findByConsumerIdAndEServiceId(eServiceId, consumerId)
                 .switchIfEmpty(Mono.error(new PDNDGenericException(ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND, ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND.getMessage().concat(eServiceId), HttpStatus.FORBIDDEN)))
-                .flatMap(eService -> eServiceRepository.checkEServiceStatus(eServiceId))
-                .switchIfEmpty(Mono.error(new PDNDGenericException(ExceptionTypeEnum.ESERVICE_STATUS_NOT_VALID, ExceptionTypeEnum.ESERVICE_STATUS_NOT_VALID.getMessage().concat(eServiceId), HttpStatus.FORBIDDEN)))
+                .flatMap(consumerEService -> eServiceRepository.checkEServiceStatus(eServiceId, consumerEService.getDescriptorId()))
                 .doOnNext(eService -> log.info("Faccio una ricerca tra {} - {}", start, end))
                 .flatMapMany(eservice -> signalRepository.findSignal(eServiceId, start, end))
                 .map(signalMapper::toDto);

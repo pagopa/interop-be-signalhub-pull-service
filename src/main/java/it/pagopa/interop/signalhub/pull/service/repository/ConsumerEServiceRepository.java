@@ -5,7 +5,7 @@ import reactor.core.publisher.Mono;
 
 public interface ConsumerEServiceRepository {
 
-    Mono<ConsumerEService> findByConsumerIdAndEServiceId(String consumerId, String eserviceId);
+    Mono<ConsumerEService> findByConsumerIdAndEServiceId(String eserviceId, String consumerId);
 
 }
 
