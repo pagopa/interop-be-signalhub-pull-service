@@ -19,6 +19,7 @@ public class EServiceCache {
     private String producerId;
     private String descriptorId;
     private String state;
+    private Long eventId;
     private Timestamp tmstInsert;
     private Timestamp tmstLastEdit;
 

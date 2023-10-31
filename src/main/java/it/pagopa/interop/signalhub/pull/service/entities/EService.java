@@ -19,6 +19,7 @@ public class EService {
     public static final String COLUMN_PRODUCER_ID = "producer_id";
     public static final String COLUMN_DESCRIPTOR_ID = "descriptor_id";
     public static final String COLUMN_STATE = "state";
+    public static final String COLUMN_EVENT_ID = "event_id";
     public static final String COLUMN_DATE_INSERT = "tmst_insert";
     public static final String COLUMN_DATE_UPDATE = "tmst_last_edit";
 
@@ -34,6 +35,9 @@ public class EService {
 
     @Column(COLUMN_STATE)
     private String state;
+
+    @Column(COLUMN_EVENT_ID)
+    private Long eventId;
 
     @Column(COLUMN_DATE_INSERT)
     private Timestamp tmstInsert;

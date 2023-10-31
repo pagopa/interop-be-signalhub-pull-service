@@ -20,6 +20,8 @@ public class ConsumerEServiceCache implements Serializable {
     private String consumerId;
     private String descriptorId;
     private String state;
+    private Long eventId;
+    private String agreementId;
     private Timestamp tmstInsert;
     private Timestamp tmstLastEdit;
 
