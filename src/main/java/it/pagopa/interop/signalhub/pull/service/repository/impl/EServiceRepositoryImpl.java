@@ -16,7 +16,6 @@ import org.springframework.data.relational.core.query.Query;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
-import java.nio.charset.StandardCharsets;
 
 import static it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum.ESERVICE_STATUS_IS_NOT_ACTIVE;
 import static org.springframework.data.relational.core.query.Criteria.where;
@@ -41,7 +40,7 @@ public class EServiceRepositoryImpl implements EServiceRepository {
                     return Mono.error(new PDNDGenericException(ESERVICE_STATUS_IS_NOT_ACTIVE, ESERVICE_STATUS_IS_NOT_ACTIVE.getMessage().concat(eserviceId)));
                 })
                 .switchIfEmpty(Mono.defer(() -> {
-                    log.info("[{}-{}] ConsumerEService no in cache",  eserviceId);
+                    log.info("[{}-{}] EService no in cache",  eserviceId);
                     return Mono.empty();
                 }))
                 .map(mapper::toEntity)

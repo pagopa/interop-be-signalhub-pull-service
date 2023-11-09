@@ -1,6 +1,5 @@
 package it.pagopa.interop.signalhub.pull.service.service.impl;
 
-import it.pagopa.interop.signalhub.pull.service.entities.EService;
 import it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum;
 import it.pagopa.interop.signalhub.pull.service.exception.PDNDGenericException;
 import it.pagopa.interop.signalhub.pull.service.mapper.SignalMapper;
@@ -35,7 +34,7 @@ public class SignalServiceImpl implements SignalService {
         return consumerEserviceRepository.findByConsumerIdAndEServiceId(eServiceId, consumerId)
                 .switchIfEmpty(Mono.error(new PDNDGenericException(ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND, ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND.getMessage().concat(eServiceId), HttpStatus.FORBIDDEN)))
                 .flatMap(consumerEService -> eServiceRepository.checkEServiceStatus(eServiceId, consumerEService.getDescriptorId()))
-                .doOnNext(eService -> log.info("Faccio una ricerca tra {} - {}", start, end))
+                .doOnNext(eService -> log.info("Searching signals from {} to {}", start, end))
                 .flatMapMany(eservice -> signalRepository.findSignal(eServiceId, start, end))
                 .map(signalMapper::toDto);
     }

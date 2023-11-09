@@ -20,16 +20,14 @@ public class SecurityWebFluxConfig {
     @Bean
     public SecurityWebFilterChain springSecurityFilterChain(ServerHttpSecurity http, JWTFilter jwtFilter) {
 
-        http.csrf().disable();
+        http.csrf(ServerHttpSecurity.CsrfSpec::disable);
 
-        http.authorizeExchange()
-                .pathMatchers("/actuator/health/**")
-                .permitAll()
-                .and()
-                .addFilterAt(jwtFilter, SecurityWebFiltersOrder.FIRST)
-                .authorizeExchange()
-                .anyExchange()
-                .authenticated();
+        http.authorizeExchange(authReq -> {
+            authReq.pathMatchers("/actuator/health/**").permitAll();
+            authReq.anyExchange().authenticated();
+        });
+
+        http.addFilterAt(jwtFilter, SecurityWebFiltersOrder.FIRST);
 
         return http.build();
     }
