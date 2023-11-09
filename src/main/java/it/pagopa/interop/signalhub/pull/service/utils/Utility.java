@@ -1,5 +1,6 @@
 package it.pagopa.interop.signalhub.pull.service.utils;
 
+import it.pagopa.interop.signalhub.pull.service.auth.PrincipalAgreement;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.context.ReactiveSecurityContextHolder;
 import reactor.core.publisher.Mono;
@@ -11,9 +12,9 @@ public class Utility {
         // private constructor
     }
 
-    public static Mono<String> getPrincipalFromSecurityContext(){
+    public static Mono<PrincipalAgreement> getPrincipalFromSecurityContext(){
         return ReactiveSecurityContextHolder.getContext()
-                .map(securityContext -> (String) securityContext.getAuthentication().getPrincipal());
+                .map(securityContext -> (PrincipalAgreement) securityContext.getAuthentication().getPrincipal());
     }
 
 }

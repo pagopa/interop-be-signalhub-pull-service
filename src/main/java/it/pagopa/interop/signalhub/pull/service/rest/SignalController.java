@@ -25,9 +25,9 @@ public class SignalController implements GatewayApi {
     public Mono<ResponseEntity<Flux<Signal>>> getRequest(String eserviceId, Long indexSignal, ServerWebExchange exchange) {
         return Utility.getPrincipalFromSecurityContext()
                 .switchIfEmpty(Mono.error(new PDNDGenericException(NO_AUTH_FOUNDED, NO_AUTH_FOUNDED.getMessage(), HttpStatus.UNAUTHORIZED)))
-                .map(consumerId ->
+                .map(principalAgreement ->
                         ResponseEntity.status(HttpStatus.OK)
-                                .body(this.signalService.pullSignal(consumerId, eserviceId, indexSignal))
+                                .body(this.signalService.pullSignal(principalAgreement.getPrincipalId(), eserviceId, indexSignal))
                 );
     }
 

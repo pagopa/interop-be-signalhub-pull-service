@@ -1,63 +1,54 @@
 package it.pagopa.interop.signalhub.pull.service.filter;
 
-import com.auth0.jwk.Jwk;
-import com.auth0.jwk.JwkException;
-import com.auth0.jwk.JwkProvider;
+
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import it.pagopa.interop.signalhub.pull.service.auth.JWTAuthManager;
-import it.pagopa.interop.signalhub.pull.service.exception.PDNDGenericException;
+import it.pagopa.interop.signalhub.pull.service.auth.JWTConverter;
+import it.pagopa.interop.signalhub.pull.service.auth.PrincipalAgreement;
+import it.pagopa.interop.signalhub.pull.service.auth.PrincipalAgreementValidator;
+import it.pagopa.interop.signalhub.pull.service.config.BeanBuilder;
 import it.pagopa.interop.signalhub.pull.service.repository.JWTRepository;
-import it.pagopa.interop.signalhub.pull.service.repository.cache.model.JWTCache;
+import it.pagopa.interop.signalhub.pull.service.service.InteropService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.http.server.reactive.MockServerHttpRequest;
 import org.springframework.mock.web.server.MockServerWebExchange;
 import org.springframework.security.authentication.ReactiveAuthenticationManager;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.web.server.authentication.ServerAuthenticationSuccessHandler;
 import org.springframework.security.web.server.context.NoOpServerSecurityContextRepository;
 import org.springframework.security.web.server.context.ServerSecurityContextRepository;
-import org.springframework.web.server.ServerWebExchange;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.function.Function;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(MockitoExtension.class)
 class JWTFilterTest {
-
     @Mock
-    private  Function<ServerWebExchange, Mono<DecodedJWT>> jwtDecoded;
-
+    private JWTConverter jwtConverter;
     @Mock
-    private  ReactiveAuthenticationManager reactiveAuthManager = new JWTAuthManager();
-
+    private PrincipalAgreementValidator principalAgreementValidator;
+    @Spy
+    private ReactiveAuthenticationManager reactiveAuthManager = new JWTAuthManager();
     @Mock
-    private  ServerSecurityContextRepository securityContextRepository = NoOpServerSecurityContextRepository.getInstance();
-
+    private ServerSecurityContextRepository securityContextRepository = NoOpServerSecurityContextRepository.getInstance();
     @Mock
     private ServerAuthenticationSuccessHandler authSuccessHandler;
-
-    @Mock
-    private JwkProvider jwkProvider;
-
     @Mock
     private JWTRepository jwtRepository;
-
+    @Mock
+    private InteropService interopService;
     @InjectMocks
     private JWTFilter jwtFilter;
 
     @Test
-    void filterTest() throws JwkException {
-        DecodedJWT jwt = JWT.decode("eyJ0eXAiOiJhdCtqd3QiLCJhbGciOiJSUzI1NiIsInVzZSI6InNpZyIsImtpZCI6IjMyZDhhMzIxLTE1NjgtNDRmNS05NTU4LWE5MDcyZjUxOWQyZCJ9.eyJvcmdhbml6YXRpb25JZCI6Ijg0ODcxZmQ0LTJmZDctNDZhYi05ZDIyLWY2YjQ1MmY0YjNjNSIsImF1ZCI6InVhdC5pbnRlcm9wLnBhZ29wYS5pdC9tMm0iLCJzdWIiOiIxMTM2ODUyNy00OTRiLTQyNDQtOTcwNi1iNzgyYjU0NDM4MzEiLCJyb2xlIjoibTJtIiwibmJmIjoxNjk3MTAxOTM3LCJpc3MiOiJ1YXQuaW50ZXJvcC5wYWdvcGEuaXQiLCJleHAiOjE2OTcxMDI1MzcsImlhdCI6MTY5NzEwMTkzNywiY2xpZW50X2lkIjoiMTEzNjg1MjctNDk0Yi00MjQ0LTk3MDYtYjc4MmI1NDQzODMxIiwianRpIjoiOTUzNGUwNjUtZTU2Mi00ODI3LTk2MjYtMWI4YjZiNWE0NzYxIn0.xHqqmq0Nd6tZIsu9nnAdawkNl2fA_2shnyLGiDKjmAYvp3V83gZQn64nOhD1gr_9RKceuVhC-hr39v1TntNQHKDjd93JoNPdyBm96ALif_mqxFs3IAdMpQqqxNAbAI2d7dnqpnxzRV8MRojbVCp4nuViBkGFZa6WMAgPD6dW22R_PIXJA1WYEEM3Z3qupzmsbDVfW13bnbZTqjcDMrCLwozkFIGy9qTcH4oXTlVJLF5xIyHJtVwERIMxR0jxql4Gpo9ix8DHz5mKSRUns8gfvakcrUYsmE__2ggrklUsFVBEVgcrC5q7KrLGMUvIunuPv72vkYFPA30x-NhuYxsg4w");
+    void filterTest() {
+        DecodedJWT jwt = JWT.decode("eyJ0eXAiOiJhdCtqd3QiLCJhbGciOiJSUzI1NiIsInVzZSI6InNpZyIsImtpZCI6IjMyZDhhMzIxLTE1NjgtNDRmNS05NTU4LWE5MDcyZjUxOWQyZCJ9.eyJhdWQiOiJpbnRlcm9wLXNpZ25hbGh1Yi1wdXNoLXNpZ25hbCIsInN1YiI6ImY3YzFhZDIwLWIwZDktNDIxMi1iMGIwLTQ2NTkyODgzNTY2MyIsIm5iZiI6MTY5OTQ1NjYzNCwicHVycG9zZUlkIjoiYjY5M2ViNmUtNzNkZC00YjU4LWE0MmEtM2UwNjRhNmE0Y2FiIiwiaXNzIjoidWF0LmludGVyb3AucGFnb3BhLml0IiwiZXhwIjoxNjk5NDU4NDM0LCJpYXQiOjE2OTk0NTY2MzQsImNsaWVudF9pZCI6ImY3YzFhZDIwLWIwZDktNDIxMi1iMGIwLTQ2NTkyODgzNTY2MyIsImp0aSI6ImFjNDVjZDE2LThmMzgtNDFhYS1hODg2LWYyZWY5OWM4ZDE1MyJ9.u0j4xsRY-8sQKRvBr-QjP6FFTwycWz7bgN6t8wyv9cSk9LZUsmOO5pxrudwVL0I5zAjo2uYjEcvNv7VYHynn01mXR1zi2vDO9Se83fQ479_4HhNroENbI7wBwfzm51teUq7cQ1f19o4CKO5esnw0RdjOpWx9yCFyNhmqcVHRhHRiRAcuyxC0E5QMGGbNcoZEljfzNy6QIruF9dUbeeHKqyF_RA-zhKCuQB7bnTDnQPyYd3mrOktYIcnGjeE1ynJJGHvCeM-P84WwbnnbSzQKYpEJHYa4TS-hRm2H3MIv1fLkAjnM8qWkjIwh6AZB-EemboE5CzRx_86Z_WQ2n0QXMw");
 
         MockServerWebExchange exchange = MockServerWebExchange.from(
                 MockServerHttpRequest
@@ -66,18 +57,28 @@ class JWTFilterTest {
 
         WebFilterChain filterChain = filterExchange -> Mono.empty();
 
+        Mockito.when(jwtConverter.apply(Mockito.any())).thenReturn(Mono.just(jwt));
         Mockito.when(jwtRepository.findByJWT(Mockito.any())).thenReturn(Mono.just(jwt ));
-        Mockito.when(jwkProvider.get(Mockito.any())).thenReturn(new Jwk("1","1","12", "1",new ArrayList<>(),"1", new ArrayList<>(), "1", new HashMap<>()));
-        Mockito.when(jwtRepository.saveOnCache(Mockito.any())).thenReturn(Mono.just(new JWTCache()));
+        Mockito.when(interopService.getPrincipalFromPurposeId(Mockito.any()))
+                        .thenReturn(Mono.just(BeanBuilder.getPrincipal()));
+        Mockito.when(principalAgreementValidator.test(BeanBuilder.getPrincipal()))
+                .thenReturn(true);
 
-        PDNDGenericException thrown = assertThrows(
-                PDNDGenericException.class,
-                () -> {
-                    jwtFilter.filter(exchange,filterChain).block();
-                }
-        );
-        assertEquals("Il vaucher passato non è valido", thrown.getMessage());
+        Mockito.when(authSuccessHandler.onAuthenticationSuccess(Mockito.any(), Mockito.any()))
+                        .thenReturn(Mono.just("").then());
 
+        jwtFilter.filter(exchange,filterChain).block();
+
+        ArgumentCaptor<Authentication> captureAuth = ArgumentCaptor.forClass(Authentication.class);
+
+
+        Mockito.verify(reactiveAuthManager, Mockito.timeout(1000).times(1))
+                .authenticate(captureAuth.capture());
+
+        assertNotNull(captureAuth);
+        assertNotNull(captureAuth.getValue());
+        assertNotNull(captureAuth.getValue().getPrincipal());
+        assertInstanceOf(PrincipalAgreement.class, captureAuth.getValue().getPrincipal());
 
     }
 

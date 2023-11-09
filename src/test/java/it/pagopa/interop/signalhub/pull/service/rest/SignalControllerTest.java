@@ -1,6 +1,5 @@
 package it.pagopa.interop.signalhub.pull.service.rest;
 
-import it.pagopa.interop.signalhub.pull.service.LocalStackTestConfig;
 import it.pagopa.interop.signalhub.pull.service.config.BaseTest;
 import it.pagopa.interop.signalhub.pull.service.config.WithMockCustomUser;
 import it.pagopa.interop.signalhub.pull.service.rest.v1.dto.Signal;
@@ -8,12 +7,9 @@ import it.pagopa.interop.signalhub.pull.service.service.SignalService;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
 
