@@ -29,7 +29,6 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 
-import javax.validation.constraints.NotNull;
 import java.security.PublicKey;
 import java.util.function.Function;
 
@@ -51,7 +50,7 @@ public class JWTFilter implements WebFilter {
     private JWTRepository jwtRepository;
 
     @Override
-    public Mono<Void> filter(ServerWebExchange exchangeRequest, @NotNull WebFilterChain chain) {
+    public Mono<Void> filter(ServerWebExchange exchangeRequest, WebFilterChain chain) {
         if (exchangeRequest.getRequest().getHeaders().get("Authorization") == null) {
             return chain.filter(exchangeRequest);
         }

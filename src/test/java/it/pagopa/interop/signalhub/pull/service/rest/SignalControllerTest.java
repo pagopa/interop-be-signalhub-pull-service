@@ -20,7 +20,6 @@ import reactor.core.publisher.Flux;
 
 
 class SignalControllerTest extends BaseTest.WithWebEnvironment {
-
     @Autowired
     private WebTestClient webTestClient;
     @MockBean
