@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
 
+import static it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum.ESERVICE_NOT_FOUND;
 import static it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum.ESERVICE_STATUS_IS_NOT_ACTIVE;
 import static org.springframework.data.relational.core.query.Criteria.where;
 
@@ -54,7 +55,7 @@ public class EServiceRepositoryImpl implements EServiceRepository {
         return this.template.selectOne(equals, EService.class)
                 .switchIfEmpty(Mono.defer(()-> {
                     log.info("[{}-{}] EService not founded into DB",  eserviceId, descriptorId);
-                    return Mono.empty();
+                    return Mono.error(new PDNDGenericException(ESERVICE_NOT_FOUND, ESERVICE_NOT_FOUND.getMessage().concat(eserviceId)));
                 }))
                 .doOnNext(entity ->
                         log.info("[{}-{}] EService founded into DB",  eserviceId, descriptorId)

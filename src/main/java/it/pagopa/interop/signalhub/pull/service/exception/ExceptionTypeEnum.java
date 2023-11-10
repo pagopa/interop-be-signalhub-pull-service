@@ -15,6 +15,7 @@ public enum ExceptionTypeEnum {
 
     CORRESPONDENCE_NOT_FOUND("CORRESPONDENCE_NOT_FOUND", "Non risulta corrispondenza tra l'erogatore e l'id del servizio: "),
     ESERVICE_STATUS_IS_NOT_ACTIVE("ESERVICE_STATUS_IS_NOT_ACTIVE", "Lo stato del servizio è diverso da ACTIVE. EServiceId: "),
+    ESERVICE_NOT_FOUND("ESERVICE_NOT_FOUND", "L'eservice non è presente a sistema - eserviceId: "),
     SIGNALID_ALREADY_EXISTS("SIGNALID_NOT_EXISTS", "non esiste nessun segnale per il signalId selezionato");
 
     private final String title;
