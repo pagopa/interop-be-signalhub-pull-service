@@ -1,5 +1,6 @@
 package it.pagopa.interop.signalhub.pull.service.config;
 
+import it.pagopa.interop.signalhub.pull.service.generated.openapi.client.interop.model.v1.Agreement;
 import it.pagopa.interop.signalhub.pull.service.repository.cache.model.ConsumerEServiceCache;
 import it.pagopa.interop.signalhub.pull.service.repository.cache.model.EServiceCache;
 import it.pagopa.interop.signalhub.pull.service.repository.cache.model.JWTCache;
@@ -37,6 +38,18 @@ public class RedisCacheConfig {
         RedisSerializationContext.RedisSerializationContextBuilder<String, EServiceCache> builder =
                 RedisSerializationContext.newSerializationContext(keySerializer);
         RedisSerializationContext<String, EServiceCache> context =
+                builder.value(valueSerializer).build();
+        return new ReactiveRedisTemplate<>(factory, context);
+    }
+
+    @Bean
+    public ReactiveRedisTemplate<String, Agreement> reactiveRedisTemplateAgreement(ReactiveRedisConnectionFactory factory) {
+        StringRedisSerializer keySerializer = new StringRedisSerializer();
+        Jackson2JsonRedisSerializer<Agreement> valueSerializer =
+                new Jackson2JsonRedisSerializer<>(Agreement.class);
+        RedisSerializationContext.RedisSerializationContextBuilder<String, Agreement> builder =
+                RedisSerializationContext.newSerializationContext(keySerializer);
+        RedisSerializationContext<String, Agreement> context =
                 builder.value(valueSerializer).build();
         return new ReactiveRedisTemplate<>(factory, context);
     }
