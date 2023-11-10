@@ -34,7 +34,7 @@ public class EServiceRepositoryImpl implements EServiceRepository {
         return this.cacheRepository.findById(eserviceId , descriptorId)
                 .doOnNext(cache -> log.info("[{}-{}] EService in cache", eserviceId, descriptorId))
                 .flatMap(eServiceCache -> {
-                    if(eServiceCache.getState().equals(Const.STATE_PUBLISHED)) return Mono.just(eServiceCache);
+                    if(eServiceCache.getState().equalsIgnoreCase(Const.STATE_PUBLISHED)) return Mono.just(eServiceCache);
                     return Mono.error(new PDNDGenericException(ESERVICE_STATUS_IS_NOT_PUBLISHED, ESERVICE_STATUS_IS_NOT_PUBLISHED.getMessage().concat(eserviceId)));
                 })
                 .switchIfEmpty(Mono.defer(() -> {
@@ -50,7 +50,7 @@ public class EServiceRepositoryImpl implements EServiceRepository {
         Query equals = Query.query(
                 where(EService.COLUMN_ESERVICE_ID).is(eserviceId)
                         .and(where(EService.COLUMN_DESCRIPTOR_ID).is(descriptorId))
-                        .and(where(EService.COLUMN_STATE).is(Const.STATE_PUBLISHED))
+                        .and(where(EService.COLUMN_STATE).is(Const.STATE_PUBLISHED).ignoreCase(true))
         );
         return this.template.selectOne(equals, EService.class)
                 .switchIfEmpty(Mono.defer(()-> {

@@ -32,7 +32,7 @@ public class ConsumerEServiceRepositoryImpl implements ConsumerEServiceRepositor
         return this.cacheRepository.findById( eserviceId, consumerId )
                 .doOnNext(cache -> log.info("[{}-{}] ConsumerEService in cache", consumerId, eserviceId))
                 .flatMap(eServiceCache -> {
-                    if(eServiceCache.getState().equals(Const.STATE_ACTIVE)) return Mono.just(eServiceCache);
+                    if(eServiceCache.getState().equalsIgnoreCase(Const.STATE_ACTIVE)) return Mono.just(eServiceCache);
                     return Mono.error(new PDNDGenericException(CONSUMER_STATUS_IS_NOT_ACTIVE, CONSUMER_STATUS_IS_NOT_ACTIVE.getMessage().concat(eserviceId)));
                 })
                 .switchIfEmpty(Mono.defer(() -> {
@@ -47,12 +47,12 @@ public class ConsumerEServiceRepositoryImpl implements ConsumerEServiceRepositor
         Query equals = Query.query(
                 where(ConsumerEService.COLUMN_CONSUMER_ID).is(consumerId)
                         .and(where(ConsumerEService.COLUMN_ESERVICE_ID).is(eserviceId))
-                        .and(where(ConsumerEService.COLUMN_STATE).is(Const.STATE_ACTIVE))
+                        .and(where(ConsumerEService.COLUMN_STATE).is(Const.STATE_ACTIVE).ignoreCase(true))
         );
         return this.template.selectOne(equals, ConsumerEService.class)
                 .switchIfEmpty(Mono.defer(()-> {
                     log.info("[{}-{}] ConsumerEService not founded into DB", consumerId, eserviceId);
-                    return Mono.error(new PDNDGenericException(ESERVICE_NOT_FOUND, ESERVICE_NOT_FOUND.getMessage().concat(eserviceId)));
+                    return Mono.error(new PDNDGenericException(CONSUMER_ESERVICE_NOT_FOUND, CONSUMER_ESERVICE_NOT_FOUND.getMessage().concat(eserviceId)));
                 }))
                 .doOnNext(entity ->
                         log.info("[{}-{}] ConsumerEService founded into DB", consumerId, eserviceId)
