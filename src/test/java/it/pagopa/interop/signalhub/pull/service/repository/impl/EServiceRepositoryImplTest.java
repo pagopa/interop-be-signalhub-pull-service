@@ -72,7 +72,7 @@ class EServiceRepositoryImplTest {
         StepVerifier.create(eServiceRepositoryimpl.checkEServiceStatus("1234","1234"))
                 .expectErrorMatches((ex) -> {
                     assertTrue(ex instanceof PDNDGenericException);
-                    assertEquals(ExceptionTypeEnum.ESERVICE_STATUS_IS_NOT_ACTIVE,((PDNDGenericException) ex).getExceptionType());
+                    assertEquals(ExceptionTypeEnum.ESERVICE_STATUS_IS_NOT_PUBLISHED,((PDNDGenericException) ex).getExceptionType());
                     return true;
 
                 }).verify();
