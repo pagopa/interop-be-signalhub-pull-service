@@ -1,14 +1,10 @@
 package it.pagopa.interop.signalhub.pull.service.repository.impl;
 
-import it.pagopa.interop.signalhub.pull.service.entities.ConsumerEService;
 import it.pagopa.interop.signalhub.pull.service.entities.EService;
 import it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum;
 import it.pagopa.interop.signalhub.pull.service.exception.PDNDGenericException;
-import it.pagopa.interop.signalhub.pull.service.mapper.ConsumerEServiceMapper;
 import it.pagopa.interop.signalhub.pull.service.mapper.EServiceMapper;
-import it.pagopa.interop.signalhub.pull.service.repository.cache.model.ConsumerEServiceCache;
 import it.pagopa.interop.signalhub.pull.service.repository.cache.model.EServiceCache;
-import it.pagopa.interop.signalhub.pull.service.repository.cache.repository.ConsumerEServiceCacheRepository;
 import it.pagopa.interop.signalhub.pull.service.repository.cache.repository.EServiceCacheRepository;
 import it.pagopa.interop.signalhub.pull.service.utils.Const;
 import org.junit.jupiter.api.Test;
@@ -63,7 +59,7 @@ class EServiceRepositoryImplTest {
 
     @Test
     void findByConsumerIdAndEServiceIdButStateIsNotActive() {
-        EService eService= new EService();
+        EService eService = new EService();
         eService.setEserviceId("123");
         eService.setDescriptorId("123");
         EServiceCache eServiceCache= new EServiceCache();
