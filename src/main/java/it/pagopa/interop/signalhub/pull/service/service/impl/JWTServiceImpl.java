@@ -1,23 +1,23 @@
-package it.pagopa.interop.signalhub.pull.service.repository.impl;
+package it.pagopa.interop.signalhub.pull.service.service.impl;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import it.pagopa.interop.signalhub.pull.service.exception.PDNDGenericException;
-import it.pagopa.interop.signalhub.pull.service.repository.JWTRepository;
-import it.pagopa.interop.signalhub.pull.service.repository.cache.model.JWTCache;
-import it.pagopa.interop.signalhub.pull.service.repository.cache.repository.JWTCacheRepository;
+import it.pagopa.interop.signalhub.pull.service.cache.model.JWTCache;
+import it.pagopa.interop.signalhub.pull.service.cache.repository.JWTCacheRepository;
+import it.pagopa.interop.signalhub.pull.service.service.JWTService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import static it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum.JWT_NOT_VALID;
 
 
 @Slf4j
-@Repository
+@Service
 @AllArgsConstructor
-public class JWTRepositoryImpl implements JWTRepository {
+public class JWTServiceImpl implements JWTService {
 
     private final JWTCacheRepository cacheRepository;
 

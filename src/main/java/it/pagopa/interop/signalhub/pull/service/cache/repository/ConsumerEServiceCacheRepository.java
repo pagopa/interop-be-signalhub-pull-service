@@ -1,7 +1,7 @@
-package it.pagopa.interop.signalhub.pull.service.repository.cache.repository;
+package it.pagopa.interop.signalhub.pull.service.cache.repository;
 
 
-import it.pagopa.interop.signalhub.pull.service.repository.cache.model.ConsumerEServiceCache;
+import it.pagopa.interop.signalhub.pull.service.cache.model.ConsumerEServiceCache;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.ReactiveRedisOperations;

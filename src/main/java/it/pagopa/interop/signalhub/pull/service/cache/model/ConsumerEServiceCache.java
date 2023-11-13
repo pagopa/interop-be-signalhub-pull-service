@@ -1,4 +1,4 @@
-package it.pagopa.interop.signalhub.pull.service.repository.cache.model;
+package it.pagopa.interop.signalhub.pull.service.cache.model;
 
 
 import lombok.*;

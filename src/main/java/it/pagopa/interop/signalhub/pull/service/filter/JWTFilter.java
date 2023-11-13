@@ -7,9 +7,9 @@ import it.pagopa.interop.signalhub.pull.service.auth.PrincipalAgreement;
 import it.pagopa.interop.signalhub.pull.service.auth.PrincipalAgreementValidator;
 import it.pagopa.interop.signalhub.pull.service.exception.JWTException;
 import it.pagopa.interop.signalhub.pull.service.exception.PDNDGenericException;
-import it.pagopa.interop.signalhub.pull.service.repository.JWTRepository;
-import it.pagopa.interop.signalhub.pull.service.repository.cache.model.JWTCache;
+import it.pagopa.interop.signalhub.pull.service.cache.model.JWTCache;
 import it.pagopa.interop.signalhub.pull.service.service.InteropService;
+import it.pagopa.interop.signalhub.pull.service.service.JWTService;
 import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.extern.slf4j.Slf4j;
@@ -45,7 +45,7 @@ public class JWTFilter implements WebFilter {
     private final ReactiveAuthenticationManager reactiveAuthManager;
     private final ServerSecurityContextRepository securityContextRepository = NoOpServerSecurityContextRepository.getInstance();
     private final ServerAuthenticationSuccessHandler authSuccessHandler;
-    private final JWTRepository jwtRepository;
+    private final JWTService jwtService;
     private final InteropService interopService;
 
 
@@ -62,7 +62,7 @@ public class JWTFilter implements WebFilter {
                 .doOnNext(jwt -> log.info("JWT decoded"))
                 .switchIfEmpty(chain.filter(exchangeRequest).then(Mono.empty()))
                 .doOnNext(jwt -> log.info("JWT is valid ?"))
-                .flatMap(jwtRepository::findByJWT)
+                .flatMap(jwtService::findByJWT)
                 .doOnNext(jwt -> log.info("JWT is valid"))
                 .map(JWTUtil::getPurposeClaim)
                 .flatMap(interopService::getPrincipalFromPurposeId)
@@ -71,7 +71,7 @@ public class JWTFilter implements WebFilter {
                 .doOnNext(principal -> log.info("Principal is valid"))
                 .flatMap(principal -> authenticate(exchangeRequest, chain, principal))
                 .onErrorResume(JWTException.class, ex ->
-                        jwtRepository.saveOnCache(new JWTCache(ex.getJwt()))
+                        jwtService.saveOnCache(new JWTCache(ex.getJwt()))
                                 .flatMap(item -> Mono.error(new PDNDGenericException(ex.getExceptionType(), ex.getMessage(), ex.getHttpStatus())))
                 );
 

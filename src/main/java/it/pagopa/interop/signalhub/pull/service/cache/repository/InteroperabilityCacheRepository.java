@@ -1,4 +1,4 @@
-package it.pagopa.interop.signalhub.pull.service.repository.cache.repository;
+package it.pagopa.interop.signalhub.pull.service.cache.repository;
 
 
 import it.pagopa.interop.signalhub.pull.service.generated.openapi.client.interop.model.v1.Agreement;

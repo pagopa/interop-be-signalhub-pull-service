@@ -6,10 +6,10 @@ import it.pagopa.interop.signalhub.pull.service.entities.SignalEntity;
 import it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum;
 import it.pagopa.interop.signalhub.pull.service.exception.PDNDGenericException;
 import it.pagopa.interop.signalhub.pull.service.mapper.SignalMapper;
-import it.pagopa.interop.signalhub.pull.service.repository.ConsumerEServiceRepository;
-import it.pagopa.interop.signalhub.pull.service.repository.EServiceRepository;
 import it.pagopa.interop.signalhub.pull.service.repository.SignalRepository;
 import it.pagopa.interop.signalhub.pull.service.rest.v1.dto.Signal;
+import it.pagopa.interop.signalhub.pull.service.service.ConsumerService;
+import it.pagopa.interop.signalhub.pull.service.service.OrganizationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -28,20 +28,20 @@ public class SignalServiceImplTest {
     private SignalServiceImpl signalService;
 
     @Mock
-    private ConsumerEServiceRepository consumerEserviceRepository;
+    private ConsumerService consumerService;
     @Mock
     private SignalRepository signalRepository;
     @Mock
     private SignalMapper signalMapper;
     @Mock
-    private EServiceRepository eServiceRepository;
+    private OrganizationService organizationService;
 
 
 
 
     @Test
     void whenCallPullSignalAndCorrespondenceNotFound() {
-        Mockito.when(consumerEserviceRepository.findByConsumerIdAndEServiceId(Mockito.any(), Mockito.any())).thenReturn(Mono.empty());
+        Mockito.when(consumerService.getConsumerEservice(Mockito.any(), Mockito.any())).thenReturn(Mono.empty());
         StepVerifier.create(signalService.pullSignal("1234","1234",1L))
                 .expectErrorMatches((ex) -> {
                     assertTrue(ex instanceof PDNDGenericException);
@@ -59,8 +59,8 @@ public class SignalServiceImplTest {
         ConsumerEService consumerEService= new ConsumerEService();
         consumerEService.setEserviceId("123");
         consumerEService.setConsumerId("123");
-        Mockito.when(consumerEserviceRepository.findByConsumerIdAndEServiceId(Mockito.any(), Mockito.any())).thenReturn(Mono.just(consumerEService));
-        Mockito.when(eServiceRepository.checkEServiceStatus(Mockito.any(), Mockito.any())).thenReturn(Mono.just(new EService()));
+        Mockito.when(consumerService.getConsumerEservice(Mockito.any(), Mockito.any())).thenReturn(Mono.just(consumerEService));
+        Mockito.when(organizationService.getEService(Mockito.any(), Mockito.any())).thenReturn(Mono.just(new EService()));
         Mockito.when(signalRepository.findSignal(Mockito.any(),Mockito.any(), Mockito.any())).thenReturn(Flux.just(new SignalEntity()));
         Mockito.when(signalMapper.toDto(Mockito.any())).thenReturn(new Signal());
 

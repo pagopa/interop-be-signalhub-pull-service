@@ -1,11 +1,11 @@
-package it.pagopa.interop.signalhub.pull.service.repository;
+package it.pagopa.interop.signalhub.pull.service.service;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
-import it.pagopa.interop.signalhub.pull.service.repository.cache.model.JWTCache;
+import it.pagopa.interop.signalhub.pull.service.cache.model.JWTCache;
 import reactor.core.publisher.Mono;
 
 
-public interface JWTRepository {
+public interface JWTService {
 
 
     Mono<DecodedJWT> findByJWT(DecodedJWT jwt);

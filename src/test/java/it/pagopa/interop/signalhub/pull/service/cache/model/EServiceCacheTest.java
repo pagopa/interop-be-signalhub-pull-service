@@ -1,20 +1,19 @@
-package it.pagopa.interop.signalhub.pull.service.repository.cache.model;
+package it.pagopa.interop.signalhub.pull.service.cache.model;
 
+import it.pagopa.interop.signalhub.pull.service.cache.model.EServiceCache;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-class ConsumerEServiceCacheTest {
+class EServiceCacheTest {
 
     @Test
     void testNotEquals() {
-        ConsumerEServiceCache x = new ConsumerEServiceCache();
-        x.setConsumerId("123");
+        EServiceCache x = new EServiceCache();
+        x.setProducerId("123");
         x.setEserviceId("123");
         x.setDescriptorId("123");
-        ConsumerEServiceCache y = new ConsumerEServiceCache();
-        y.setConsumerId("123");
+        EServiceCache y = new EServiceCache();
+        y.setProducerId("123");
         y.setEserviceId("123");
         y.setDescriptorId("124");
         Assert.assertFalse(x.equals(y) && y.equals(x));
@@ -24,12 +23,12 @@ class ConsumerEServiceCacheTest {
 
     @Test
     public void testEqualsAndHashCode() {
-        ConsumerEServiceCache x = new ConsumerEServiceCache();
-        x.setConsumerId("123");
+        EServiceCache x = new EServiceCache();
+        x.setProducerId("123");
         x.setEserviceId("123");
         x.setDescriptorId("123");
-        ConsumerEServiceCache y = new ConsumerEServiceCache();
-        y.setConsumerId("123");
+        EServiceCache y = new EServiceCache();
+        y.setProducerId("123");
         y.setEserviceId("123");
         y.setDescriptorId("123");
         Assert.assertTrue(x.equals(y) && y.equals(x));

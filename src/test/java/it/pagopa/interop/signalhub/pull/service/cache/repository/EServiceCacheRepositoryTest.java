@@ -1,6 +1,7 @@
-package it.pagopa.interop.signalhub.pull.service.repository.cache.repository;
+package it.pagopa.interop.signalhub.pull.service.cache.repository;
 
-import it.pagopa.interop.signalhub.pull.service.repository.cache.model.EServiceCache;
+import it.pagopa.interop.signalhub.pull.service.cache.model.EServiceCache;
+import it.pagopa.interop.signalhub.pull.service.cache.repository.EServiceCacheRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

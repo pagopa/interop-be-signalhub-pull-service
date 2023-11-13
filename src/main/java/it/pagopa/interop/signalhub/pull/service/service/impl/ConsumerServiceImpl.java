@@ -1,16 +1,16 @@
-package it.pagopa.interop.signalhub.pull.service.repository.impl;
+package it.pagopa.interop.signalhub.pull.service.service.impl;
 
 import it.pagopa.interop.signalhub.pull.service.entities.ConsumerEService;
 import it.pagopa.interop.signalhub.pull.service.exception.PDNDGenericException;
 import it.pagopa.interop.signalhub.pull.service.mapper.ConsumerEServiceMapper;
 import it.pagopa.interop.signalhub.pull.service.repository.ConsumerEServiceRepository;
-import it.pagopa.interop.signalhub.pull.service.repository.cache.repository.ConsumerEServiceCacheRepository;
+import it.pagopa.interop.signalhub.pull.service.cache.repository.ConsumerEServiceCacheRepository;
+import it.pagopa.interop.signalhub.pull.service.service.ConsumerService;
 import it.pagopa.interop.signalhub.pull.service.utils.Const;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Query;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import static it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum.*;
@@ -18,16 +18,16 @@ import static org.springframework.data.relational.core.query.Criteria.where;
 
 
 @Slf4j
-@Repository
+@Service
 @AllArgsConstructor
-public class ConsumerEServiceRepositoryImpl implements ConsumerEServiceRepository {
+public class ConsumerServiceImpl implements ConsumerService {
 
-    private final R2dbcEntityTemplate template;
+    private final ConsumerEServiceRepository consumerEServiceRepository;
     private final ConsumerEServiceCacheRepository cacheRepository;
     private final ConsumerEServiceMapper mapper;
 
     @Override
-    public Mono<ConsumerEService> findByConsumerIdAndEServiceId( String eserviceId, String consumerId ) {
+    public Mono<ConsumerEService> getConsumerEservice(String eserviceId, String consumerId ) {
 
         return this.cacheRepository.findById( eserviceId, consumerId )
                 .doOnNext(cache -> log.info("[{}-{}] ConsumerEService in cache", consumerId, eserviceId))
@@ -44,12 +44,8 @@ public class ConsumerEServiceRepositoryImpl implements ConsumerEServiceRepositor
     }
 
     private Mono<ConsumerEService> getFromDbAndSaveOnCache(String eserviceId, String consumerId){
-        Query equals = Query.query(
-                where(ConsumerEService.COLUMN_CONSUMER_ID).is(consumerId)
-                        .and(where(ConsumerEService.COLUMN_ESERVICE_ID).is(eserviceId))
-                        .and(where(ConsumerEService.COLUMN_STATE).is(Const.STATE_ACTIVE).ignoreCase(true))
-        );
-        return this.template.selectOne(equals, ConsumerEService.class)
+
+        return this.consumerEServiceRepository.findByConsumerIdAndEServiceIdAndState(eserviceId,consumerId, Const.STATE_ACTIVE)
                 .switchIfEmpty(Mono.defer(()-> {
                     log.info("[{}-{}] ConsumerEService not founded into DB", consumerId, eserviceId);
                     return Mono.error(new PDNDGenericException(CONSUMER_ESERVICE_NOT_FOUND, CONSUMER_ESERVICE_NOT_FOUND.getMessage().concat(eserviceId)));

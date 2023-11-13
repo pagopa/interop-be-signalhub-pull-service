@@ -1,14 +1,12 @@
-package it.pagopa.interop.signalhub.pull.service.repository.cache.repository;
+package it.pagopa.interop.signalhub.pull.service.cache.repository;
 
 
-import it.pagopa.interop.signalhub.pull.service.repository.cache.model.EServiceCache;
+import it.pagopa.interop.signalhub.pull.service.cache.model.EServiceCache;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.ReactiveRedisOperations;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
-
-import java.util.function.Predicate;
 
 @Slf4j
 @Repository

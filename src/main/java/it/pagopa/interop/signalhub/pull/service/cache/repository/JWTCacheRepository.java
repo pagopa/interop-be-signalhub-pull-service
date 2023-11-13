@@ -1,7 +1,7 @@
-package it.pagopa.interop.signalhub.pull.service.repository.cache.repository;
+package it.pagopa.interop.signalhub.pull.service.cache.repository;
 
 
-import it.pagopa.interop.signalhub.pull.service.repository.cache.model.JWTCache;
+import it.pagopa.interop.signalhub.pull.service.cache.model.JWTCache;
 import lombok.AllArgsConstructor;
 import org.springframework.data.redis.core.ReactiveRedisOperations;
 import org.springframework.stereotype.Repository;

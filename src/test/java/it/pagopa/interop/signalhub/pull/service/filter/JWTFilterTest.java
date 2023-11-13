@@ -8,8 +8,8 @@ import it.pagopa.interop.signalhub.pull.service.auth.JWTConverter;
 import it.pagopa.interop.signalhub.pull.service.auth.PrincipalAgreement;
 import it.pagopa.interop.signalhub.pull.service.auth.PrincipalAgreementValidator;
 import it.pagopa.interop.signalhub.pull.service.config.BeanBuilder;
-import it.pagopa.interop.signalhub.pull.service.repository.JWTRepository;
 import it.pagopa.interop.signalhub.pull.service.service.InteropService;
+import it.pagopa.interop.signalhub.pull.service.service.JWTService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
@@ -40,7 +40,7 @@ class JWTFilterTest {
     @Mock
     private ServerAuthenticationSuccessHandler authSuccessHandler;
     @Mock
-    private JWTRepository jwtRepository;
+    private JWTService jwtService;
     @Mock
     private InteropService interopService;
     @InjectMocks
@@ -58,7 +58,7 @@ class JWTFilterTest {
         WebFilterChain filterChain = filterExchange -> Mono.empty();
 
         Mockito.when(jwtConverter.apply(Mockito.any())).thenReturn(Mono.just(jwt));
-        Mockito.when(jwtRepository.findByJWT(Mockito.any())).thenReturn(Mono.just(jwt ));
+        Mockito.when(jwtService.findByJWT(Mockito.any())).thenReturn(Mono.just(jwt ));
         Mockito.when(interopService.getPrincipalFromPurposeId(Mockito.any()))
                         .thenReturn(Mono.just(BeanBuilder.getPrincipal()));
         Mockito.when(principalAgreementValidator.test(BeanBuilder.getPrincipal()))

@@ -1,11 +1,11 @@
-package it.pagopa.interop.signalhub.pull.service.repository.impl;
+package it.pagopa.interop.signalhub.pull.service.service.impl;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum;
 import it.pagopa.interop.signalhub.pull.service.exception.PDNDGenericException;
-import it.pagopa.interop.signalhub.pull.service.repository.cache.model.JWTCache;
-import it.pagopa.interop.signalhub.pull.service.repository.cache.repository.JWTCacheRepository;
+import it.pagopa.interop.signalhub.pull.service.cache.model.JWTCache;
+import it.pagopa.interop.signalhub.pull.service.cache.repository.JWTCacheRepository;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -18,10 +18,10 @@ import reactor.test.StepVerifier;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-class JWTRepositoryImplTest {
+class JWTServiceImplTest {
 
     @InjectMocks
-    private JWTRepositoryImpl jwtRepository;
+    private JWTServiceImpl jwtRepository;
 
     @Mock
     private JWTCacheRepository cacheRepository;

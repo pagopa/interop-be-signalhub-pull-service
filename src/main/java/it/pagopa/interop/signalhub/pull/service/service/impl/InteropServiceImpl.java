@@ -6,7 +6,7 @@ import it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum;
 import it.pagopa.interop.signalhub.pull.service.exception.PDNDGenericException;
 import it.pagopa.interop.signalhub.pull.service.externalclient.InteroperabilityClient;
 import it.pagopa.interop.signalhub.pull.service.mapper.PrincipalAgreementMapper;
-import it.pagopa.interop.signalhub.pull.service.repository.cache.repository.InteroperabilityCacheRepository;
+import it.pagopa.interop.signalhub.pull.service.cache.repository.InteroperabilityCacheRepository;
 import it.pagopa.interop.signalhub.pull.service.service.InteropService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

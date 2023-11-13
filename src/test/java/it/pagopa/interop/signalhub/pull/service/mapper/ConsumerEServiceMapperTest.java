@@ -1,9 +1,7 @@
 package it.pagopa.interop.signalhub.pull.service.mapper;
 
 import it.pagopa.interop.signalhub.pull.service.entities.ConsumerEService;
-import it.pagopa.interop.signalhub.pull.service.entities.SignalEntity;
-import it.pagopa.interop.signalhub.pull.service.repository.cache.model.ConsumerEServiceCache;
-import it.pagopa.interop.signalhub.pull.service.rest.v1.dto.Signal;
+import it.pagopa.interop.signalhub.pull.service.cache.model.ConsumerEServiceCache;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.mapstruct.factory.Mappers;
