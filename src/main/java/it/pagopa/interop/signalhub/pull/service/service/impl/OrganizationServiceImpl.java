@@ -58,6 +58,8 @@ public class OrganizationServiceImpl implements OrganizationService {
                 .doOnNext(entity ->
                         log.info("[{}-{}] EService founded into DB",  eserviceId, descriptorId)
                 )
+                .collectList()
+                .map(list -> list.get(0))
                 .flatMap(entity -> this.cacheRepository.save(mapper.toCache(entity)))
                 .map(mapper::toEntity);
     }

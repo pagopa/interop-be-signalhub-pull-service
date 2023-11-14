@@ -53,6 +53,8 @@ public class ConsumerServiceImpl implements ConsumerService {
                 .doOnNext(entity ->
                         log.info("[{}-{}] ConsumerEService founded into DB", consumerId, eserviceId)
                 )
+                .collectList()
+                .map(list -> list.get(0))
                 .flatMap(entity -> this.cacheRepository.save(mapper.toCache(entity)))
                 .map(mapper::toEntity);
     }

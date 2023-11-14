@@ -14,6 +14,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.test.StepVerifier;
 
@@ -38,7 +39,7 @@ class ConsumerServiceImplTest {
     @Test
     void findByConsumerIdAndEServiceIdButNotExists() {
         Mockito.when(cacheRepository.findById(Mockito.any(), Mockito.any())).thenReturn(Mono.empty());
-        Mockito.when(consumerEServiceRepository.findByConsumerIdAndEServiceIdAndState(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Mono.empty());
+        Mockito.when(consumerEServiceRepository.findByConsumerIdAndEServiceIdAndState(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Flux.empty());
 
         StepVerifier.create(consumerService.getConsumerEservice("1234","1234"))
                 .expectErrorMatches((ex) -> {
@@ -62,7 +63,7 @@ class ConsumerServiceImplTest {
         consumerEServiceCache.setState(Const.STATE_ACTIVE);
         Mockito.when(cacheRepository.findById(Mockito.any(), Mockito.any())).thenReturn(Mono.just(consumerEServiceCache));
         Mockito.when(mapper.toEntity(Mockito.any())).thenReturn(consumerEService);
-        Mockito.when(consumerEServiceRepository.findByConsumerIdAndEServiceIdAndState(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Mono.empty());
+        Mockito.when(consumerEServiceRepository.findByConsumerIdAndEServiceIdAndState(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Flux.empty());
         assertNotNull(consumerService.getConsumerEservice("123", "123").block());
 
         //case 2: founded in cache but state is not active
@@ -79,7 +80,7 @@ class ConsumerServiceImplTest {
     @Test
     void findByConsumerIdAndEServiceIdButNotFoundInCache() {
         Mockito.when(cacheRepository.findById(Mockito.any(), Mockito.any())).thenReturn(Mono.empty());
-        Mockito.when(consumerEServiceRepository.findByConsumerIdAndEServiceIdAndState(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Mono.just(new ConsumerEService()));
+        Mockito.when(consumerEServiceRepository.findByConsumerIdAndEServiceIdAndState(Mockito.any(), Mockito.any(), Mockito.any())).thenReturn(Flux.just(new ConsumerEService()));
         Mockito.when(cacheRepository.save(Mockito.any())).thenReturn(Mono.just(new ConsumerEServiceCache()));
         Mockito.when(mapper.toEntity(Mockito.any())).thenReturn(new ConsumerEService());
         assertNotNull(consumerService.getConsumerEservice("123", "123").block());

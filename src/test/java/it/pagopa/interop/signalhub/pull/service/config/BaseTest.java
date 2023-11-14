@@ -7,6 +7,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.test.autoconfigure.data.r2dbc.DataR2dbcTest;
 import org.springframework.boot.test.autoconfigure.web.reactive.AutoConfigureWebTestClient;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
@@ -18,7 +19,9 @@ import org.springframework.test.context.ActiveProfiles;
 @Import(LocalStackTestConfig.class)
 public class BaseTest {
 
-
+    @ActiveProfiles("test")
+    @DataR2dbcTest
+    public static class WithR2DBC { }
 
     @ActiveProfiles("test")
     @Import(LocalStackTestConfig.class)
