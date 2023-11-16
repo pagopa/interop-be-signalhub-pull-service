@@ -42,7 +42,7 @@ public class SignalServiceImplTest {
     @Test
     void whenCallPullSignalAndCorrespondenceNotFound() {
         Mockito.when(consumerEserviceRepository.findByConsumerIdAndEServiceId(Mockito.any(), Mockito.any())).thenReturn(Mono.empty());
-        StepVerifier.create(signalService.pullSignal("1234","1234",1L))
+        StepVerifier.create(signalService.pullSignal("1234","1234",1L, 1l))
                 .expectErrorMatches((ex) -> {
                     assertTrue(ex instanceof PDNDGenericException);
                     assertEquals(ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND,((PDNDGenericException) ex).getExceptionType());
@@ -64,7 +64,7 @@ public class SignalServiceImplTest {
         Mockito.when(signalRepository.findSignal(Mockito.any(),Mockito.any(), Mockito.any())).thenReturn(Flux.just(new SignalEntity()));
         Mockito.when(signalMapper.toDto(Mockito.any())).thenReturn(new Signal());
 
-        assertNotNull(signalService.pullSignal("1234","1234",1L).blockLast());
+        assertNotNull(signalService.pullSignal("1234","1234",1L, 1l).blockLast());
     }
 
 

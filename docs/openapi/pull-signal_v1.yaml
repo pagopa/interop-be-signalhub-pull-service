@@ -32,7 +32,7 @@ paths:
       tags:
         - gateway
       summary: Get a list of signals
-      description: Retrieve a list o signals on a specific eservice starting from indexSignal 
+      description: Retrieve a list o signals on a specific eservice starting from indexSignal
       operationId: getRequest
       security:
         - bearerAuth: []
@@ -51,6 +51,14 @@ paths:
             type: integer
             format: int64
             default: 0
+        - name: size
+          in: query
+          description: number of signals to search
+          required: false
+          schema:
+            type: integer
+            format: int64
+            default: 0
 
       responses:
         '200':
@@ -58,7 +66,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SignalList'
+                $ref: '#/components/schemas/PaginationSignal'
           headers:
             'X-Rate-Limit-Limit':
               schema:
@@ -76,13 +84,13 @@ paths:
               schema:
                 type: integer
               description: Last signal index
-            
+
         '206':
           description: Partial content
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SignalList'
+                $ref: '#/components/schemas/PaginationSignal'
           headers:
             'X-Rate-Limit-Limit':
               schema:
@@ -227,12 +235,19 @@ components:
           type: integer
           description: sorting signal index
           format: int64
-    SignalList:
-      title: SignalList
-      description: SignalList
-      type: array
-      items: 
-        $ref: '#/components/schemas/Signal'
+
+    PaginationSignal:
+      type: object
+      description: PaginationSignal
+      properties:
+        signals:
+          type: array
+          items:
+            $ref: '#/components/schemas/Signal'
+        lastIndexSignal:
+          type: integer
+          format: int64
+
     SignalType:
       type: string
       description: type of signal

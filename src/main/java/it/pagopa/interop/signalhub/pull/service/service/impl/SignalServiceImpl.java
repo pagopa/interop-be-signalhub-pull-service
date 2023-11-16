@@ -27,10 +27,10 @@ public class SignalServiceImpl implements SignalService {
 
 
     @Override
-    public Flux<Signal> pullSignal(String consumerId, String eServiceId, Long indexSignal) {
+    public Flux<Signal> pullSignal(String consumerId, String eServiceId, Long indexSignal, Long size) {
         long finalIndexSignal = indexSignal;
         long start = finalIndexSignal+1;
-        long end = finalIndexSignal+100;
+        long end = finalIndexSignal+size;
         return consumerEserviceRepository.findByConsumerIdAndEServiceId(eServiceId, consumerId)
                 .switchIfEmpty(Mono.error(new PDNDGenericException(ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND, ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND.getMessage().concat(eServiceId), HttpStatus.FORBIDDEN)))
                 .flatMap(consumerEService -> eServiceRepository.checkEServiceStatus(eServiceId, consumerEService.getDescriptorId()))

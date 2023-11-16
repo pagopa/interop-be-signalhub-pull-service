@@ -13,4 +13,5 @@ import org.springframework.context.annotation.Configuration;
 public class SignalHubPullConfig {
     private String id;
     private String audience;
+    private Long maxNumberPage;
 }
