@@ -71,7 +71,7 @@ public class JWTConverter implements Function<ServerWebExchange, Mono<DecodedJWT
             try {
                 return jwtVerifier.verify(jwt);
             } catch (JWTVerificationException ex) {
-                throw new JWTException(JWT_NOT_VALID, ex.getMessage(), HttpStatus.UNAUTHORIZED, jwt.getToken());
+                throw new JWTException(JWT_NOT_VALID, ex.getMessage(), HttpStatus.FORBIDDEN, jwt.getToken());
             }
         };
     }
@@ -81,7 +81,7 @@ public class JWTConverter implements Function<ServerWebExchange, Mono<DecodedJWT
             Jwk jwk = jwkProvider.get(jwt.getKeyId());
             return jwk.getPublicKey();
         } catch (JwkException ex) {
-            throw new JWTException(JWT_NOT_VALID, JWT_NOT_VALID.getMessage(), HttpStatus.UNAUTHORIZED, jwt.getToken());
+            throw new JWTException(JWT_NOT_VALID, JWT_NOT_VALID.getMessage(), HttpStatus.FORBIDDEN, jwt.getToken());
         }
     }
 }

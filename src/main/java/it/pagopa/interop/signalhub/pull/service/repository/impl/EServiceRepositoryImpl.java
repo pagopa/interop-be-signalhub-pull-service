@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Query;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
@@ -35,7 +36,7 @@ public class EServiceRepositoryImpl implements EServiceRepository {
                 .doOnNext(cache -> log.info("[{}-{}] EService in cache", eserviceId, descriptorId))
                 .flatMap(eServiceCache -> {
                     if(eServiceCache.getState().equalsIgnoreCase(Const.STATE_PUBLISHED)) return Mono.just(eServiceCache);
-                    return Mono.error(new PDNDGenericException(ESERVICE_STATUS_IS_NOT_PUBLISHED, ESERVICE_STATUS_IS_NOT_PUBLISHED.getMessage().concat(eserviceId)));
+                    return Mono.error(new PDNDGenericException(ESERVICE_STATUS_IS_NOT_PUBLISHED, ESERVICE_STATUS_IS_NOT_PUBLISHED.getMessage().concat(eserviceId), HttpStatus.FORBIDDEN));
                 })
                 .switchIfEmpty(Mono.defer(() -> {
                     log.info("[{}-{}] EService no in cache",  eserviceId, descriptorId);
@@ -55,7 +56,7 @@ public class EServiceRepositoryImpl implements EServiceRepository {
         return this.template.selectOne(equals, EService.class)
                 .switchIfEmpty(Mono.defer(()-> {
                     log.info("[{}-{}] EService not founded into DB",  eserviceId, descriptorId);
-                    return Mono.error(new PDNDGenericException(ESERVICE_NOT_FOUND, ESERVICE_NOT_FOUND.getMessage().concat(eserviceId)));
+                    return Mono.error(new PDNDGenericException(ESERVICE_NOT_FOUND, ESERVICE_NOT_FOUND.getMessage().concat(eserviceId), HttpStatus.FORBIDDEN));
                 }))
                 .doOnNext(entity ->
                         log.info("[{}-{}] EService founded into DB",  eserviceId, descriptorId)

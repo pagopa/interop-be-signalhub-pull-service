@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.r2dbc.core.R2dbcEntityTemplate;
 import org.springframework.data.relational.core.query.Query;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Mono;
 
@@ -33,7 +34,7 @@ public class ConsumerEServiceRepositoryImpl implements ConsumerEServiceRepositor
                 .doOnNext(cache -> log.info("[{}-{}] ConsumerEService in cache", consumerId, eserviceId))
                 .flatMap(eServiceCache -> {
                     if(eServiceCache.getState().equalsIgnoreCase(Const.STATE_ACTIVE)) return Mono.just(eServiceCache);
-                    return Mono.error(new PDNDGenericException(CONSUMER_STATUS_IS_NOT_ACTIVE, CONSUMER_STATUS_IS_NOT_ACTIVE.getMessage().concat(eserviceId)));
+                    return Mono.error(new PDNDGenericException(CONSUMER_STATUS_IS_NOT_ACTIVE, CONSUMER_STATUS_IS_NOT_ACTIVE.getMessage().concat(eserviceId), HttpStatus.FORBIDDEN));
                 })
                 .switchIfEmpty(Mono.defer(() -> {
                     log.info("[{}-{}] ConsumerEService no in cache", consumerId, eserviceId);
@@ -52,7 +53,7 @@ public class ConsumerEServiceRepositoryImpl implements ConsumerEServiceRepositor
         return this.template.selectOne(equals, ConsumerEService.class)
                 .switchIfEmpty(Mono.defer(()-> {
                     log.info("[{}-{}] ConsumerEService not founded into DB", consumerId, eserviceId);
-                    return Mono.error(new PDNDGenericException(CONSUMER_ESERVICE_NOT_FOUND, CONSUMER_ESERVICE_NOT_FOUND.getMessage().concat(eserviceId)));
+                    return Mono.error(new PDNDGenericException(CONSUMER_ESERVICE_NOT_FOUND, CONSUMER_ESERVICE_NOT_FOUND.getMessage().concat(eserviceId), HttpStatus.FORBIDDEN));
                 }))
                 .doOnNext(entity ->
                         log.info("[{}-{}] ConsumerEService founded into DB", consumerId, eserviceId)
