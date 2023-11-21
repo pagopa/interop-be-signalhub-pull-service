@@ -27,14 +27,14 @@ public class SignalController implements GatewayApi {
 
 
     @Override
-    public Mono<ResponseEntity<PaginationSignal>> getRequest(String eserviceId, Long indexSignal, Long size, ServerWebExchange exchange) {
+    public Mono<ResponseEntity<PaginationSignal>> getRequest(String eserviceId, Long signalId, Long size, ServerWebExchange exchange) {
 
         final Long finalSize = (size == 0 || size > signalHubPullConfig.getMaxNumberPage()) ? signalHubPullConfig.getMaxNumberPage() : size;
         final HttpStatus finalStatus = size > signalHubPullConfig.getMaxNumberPage() ? HttpStatus.PARTIAL_CONTENT : HttpStatus.OK;
 
         return Utility.getPrincipalFromSecurityContext()
                 .switchIfEmpty(Mono.error(new PDNDGenericException(NO_AUTH_FOUNDED, NO_AUTH_FOUNDED.getMessage(), HttpStatus.UNAUTHORIZED)))
-                .flatMapMany(principalAgreement -> this.signalService.pullSignal(principalAgreement.getPrincipalId(), eserviceId, indexSignal, finalSize))
+                .flatMapMany(principalAgreement -> this.signalService.pullSignal(principalAgreement.getPrincipalId(), eserviceId, signalId, finalSize))
                 .collectList()
                 .map(list -> ResponseEntity.status(finalStatus)
                             .body(toPagination(list))
@@ -45,9 +45,9 @@ public class SignalController implements GatewayApi {
     private PaginationSignal toPagination(List<Signal> list) {
         PaginationSignal paginationSignal = new PaginationSignal();
         paginationSignal.setSignals(list);
-        if (list == null || list.isEmpty()) paginationSignal.setLastIndexSignal(null);
+        if (list == null || list.isEmpty()) paginationSignal.setLastSignalId(null);
         else {
-            paginationSignal.setLastIndexSignal(list.get(list.size()-1).getIndexSignal());
+            paginationSignal.setLastSignalId(list.get(list.size()-1).getSignalId());
         }
         return paginationSignal;
     }

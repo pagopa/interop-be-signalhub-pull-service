@@ -7,9 +7,8 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface SignalMapper {
-    @Mapping(target = "indexSignal", source = "signal.signalId")
+
     Signal toDto(SignalEntity signal);
 
-    @Mapping(target = "signalId", source = "dto.indexSignal")
     SignalEntity toEntity(Signal dto);
 }

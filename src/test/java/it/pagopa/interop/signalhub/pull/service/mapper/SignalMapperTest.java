@@ -21,14 +21,14 @@ class SignalMapperTest {
         SignalEntity signal1= new SignalEntity();
         signal1.setSignalId(1L);
         Signal signal= service.toDto(signal1);
-        assertEquals(signal.getIndexSignal(), signal1.getSignalId() );
+        assertEquals(signal.getSignalId(), signal1.getSignalId() );
     }
 
     @Test
     void toEntity() {
         Signal signal= new Signal();
-        signal.setIndexSignal(1l);
+        signal.setSignalId(1l);
         SignalEntity signalEntity= service.toEntity(signal);
-        assertEquals(signal.getIndexSignal(), signalEntity.getSignalId());
+        assertEquals(signal.getSignalId(), signalEntity.getSignalId());
     }
 }
