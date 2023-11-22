@@ -9,9 +9,9 @@ import reactor.core.publisher.Flux;
 @Repository
 public interface SignalRepository extends ReactiveCrudRepository<SignalEntity, Long> {
 
-    @Query("select * from signal s where s.eservice_id= :eserviceId and s.signal_id BETWEEN :indexSignalStart AND :indexSignalEnd " +
+    @Query("select * from signal s where s.eservice_id= :eserviceId and s.signal_id BETWEEN :signalIdStart AND :signalIdEnd " +
             "order by s.signal_id")
-    Flux<SignalEntity> findSignal(String eserviceId, Long indexSignalStart, Long indexSignalEnd);
+    Flux<SignalEntity> findSignal(String eserviceId, Long signalIdStart, Long signalIdEnd);
 
 }
 

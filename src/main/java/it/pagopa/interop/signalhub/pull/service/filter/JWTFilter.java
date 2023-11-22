@@ -67,7 +67,7 @@ public class JWTFilter implements WebFilter {
                 .map(JWTUtil::getPurposeClaim)
                 .flatMap(interopService::getPrincipalFromPurposeId)
                 .filter(principalAgreementValidator)
-                .switchIfEmpty(Mono.error(new PDNDGenericException(AGREEMENT_NOT_VALID, AGREEMENT_NOT_VALID.getMessage(), HttpStatus.UNAUTHORIZED)))
+                .switchIfEmpty(Mono.error(new PDNDGenericException(AGREEMENT_NOT_VALID, AGREEMENT_NOT_VALID.getMessage(), HttpStatus.FORBIDDEN)))
                 .doOnNext(principal -> log.info("Principal is valid"))
                 .flatMap(principal -> authenticate(exchangeRequest, chain, principal))
                 .onErrorResume(JWTException.class, ex ->

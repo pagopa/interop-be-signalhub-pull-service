@@ -40,16 +40,16 @@ public class JWTConverter implements Function<ServerWebExchange, Mono<DecodedJWT
         return Mono.justOrEmpty(serverWebExchange)
                 .map(JWTUtil::getAuthorizationPayload)
                 .filter(Objects::nonNull)
-                .switchIfEmpty(Mono.error(new PDNDGenericException(JWT_NOT_PRESENT, JWT_NOT_PRESENT.getMessage(), HttpStatus.UNAUTHORIZED)))
+                .switchIfEmpty(Mono.error(new PDNDGenericException(JWT_NOT_PRESENT, JWT_NOT_PRESENT.getMessage(), HttpStatus.FORBIDDEN)))
                 .filter(JWTUtil.matchBearerLength())
-                .switchIfEmpty(Mono.error(new PDNDGenericException(JWT_NOT_PRESENT, JWT_NOT_PRESENT.getMessage(), HttpStatus.UNAUTHORIZED)))
+                .switchIfEmpty(Mono.error(new PDNDGenericException(JWT_NOT_PRESENT, JWT_NOT_PRESENT.getMessage(), HttpStatus.FORBIDDEN)))
                 .map(JWTUtil.getBearerValue())
                 .filter(token -> !token.isEmpty())
-                .switchIfEmpty(Mono.error(new PDNDGenericException(JWT_NOT_PRESENT, JWT_NOT_PRESENT.getMessage(), HttpStatus.UNAUTHORIZED)))
+                .switchIfEmpty(Mono.error(new PDNDGenericException(JWT_NOT_PRESENT, JWT_NOT_PRESENT.getMessage(), HttpStatus.FORBIDDEN)))
                 .map(JWTUtil.decodeJwt())
                 .filter(fieldsCheck())
                 .map(validateToken())
-                .switchIfEmpty(Mono.error(new PDNDGenericException(JWT_NOT_VALID, JWT_NOT_VALID.getMessage(), HttpStatus.UNAUTHORIZED)));
+                .switchIfEmpty(Mono.error(new PDNDGenericException(JWT_NOT_VALID, JWT_NOT_VALID.getMessage(), HttpStatus.FORBIDDEN)));
     }
 
     private Predicate<DecodedJWT> fieldsCheck(){
@@ -71,7 +71,7 @@ public class JWTConverter implements Function<ServerWebExchange, Mono<DecodedJWT
             try {
                 return jwtVerifier.verify(jwt);
             } catch (JWTVerificationException ex) {
-                throw new JWTException(JWT_NOT_VALID, ex.getMessage(), HttpStatus.UNAUTHORIZED, jwt.getToken());
+                throw new JWTException(JWT_NOT_VALID, ex.getMessage(), HttpStatus.FORBIDDEN, jwt.getToken());
             }
         };
     }
@@ -81,7 +81,7 @@ public class JWTConverter implements Function<ServerWebExchange, Mono<DecodedJWT
             Jwk jwk = jwkProvider.get(jwt.getKeyId());
             return jwk.getPublicKey();
         } catch (JwkException ex) {
-            throw new JWTException(JWT_NOT_VALID, JWT_NOT_VALID.getMessage(), HttpStatus.UNAUTHORIZED, jwt.getToken());
+            throw new JWTException(JWT_NOT_VALID, JWT_NOT_VALID.getMessage(), HttpStatus.FORBIDDEN, jwt.getToken());
         }
     }
 }

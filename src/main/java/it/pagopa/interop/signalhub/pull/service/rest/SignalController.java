@@ -1,7 +1,9 @@
 package it.pagopa.interop.signalhub.pull.service.rest;
 
+import it.pagopa.interop.signalhub.pull.service.config.SignalHubPullConfig;
 import it.pagopa.interop.signalhub.pull.service.exception.PDNDGenericException;
 import it.pagopa.interop.signalhub.pull.service.rest.v1.api.GatewayApi;
+import it.pagopa.interop.signalhub.pull.service.rest.v1.dto.PaginationSignal;
 import it.pagopa.interop.signalhub.pull.service.rest.v1.dto.Signal;
 import it.pagopa.interop.signalhub.pull.service.service.SignalService;
 import it.pagopa.interop.signalhub.pull.service.utils.Utility;
@@ -10,8 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ServerWebExchange;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 import static it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum.NO_AUTH_FOUNDED;
 
@@ -20,23 +23,34 @@ import static it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEn
 @AllArgsConstructor
 public class SignalController implements GatewayApi {
     private SignalService signalService;
+    private SignalHubPullConfig signalHubPullConfig;
+
 
     @Override
-    public Mono<ResponseEntity<Flux<Signal>>> getRequest(String eserviceId, Long indexSignal, ServerWebExchange exchange) {
+    public Mono<ResponseEntity<PaginationSignal>> getRequest(String eserviceId, Long signalId, Long size, ServerWebExchange exchange) {
+
+        final Long finalSize = (size == 0 || size > signalHubPullConfig.getMaxNumberPage()) ? signalHubPullConfig.getMaxNumberPage() : size;
+        final HttpStatus finalStatus = size > signalHubPullConfig.getMaxNumberPage() ? HttpStatus.PARTIAL_CONTENT : HttpStatus.OK;
+
         return Utility.getPrincipalFromSecurityContext()
                 .switchIfEmpty(Mono.error(new PDNDGenericException(NO_AUTH_FOUNDED, NO_AUTH_FOUNDED.getMessage(), HttpStatus.UNAUTHORIZED)))
-                .map(principalAgreement ->
-                        ResponseEntity.status(HttpStatus.OK)
-                                .body(this.signalService.pullSignal(principalAgreement.getPrincipalId(), eserviceId, indexSignal))
+                .flatMapMany(principalAgreement -> this.signalService.pullSignal(principalAgreement.getPrincipalId(), eserviceId, signalId, finalSize))
+                .collectList()
+                .map(list -> ResponseEntity.status(finalStatus)
+                            .body(toPagination(list))
                 );
     }
 
 
-
-
-
-
-
+    private PaginationSignal toPagination(List<Signal> list) {
+        PaginationSignal paginationSignal = new PaginationSignal();
+        paginationSignal.setSignals(list);
+        if (list == null || list.isEmpty()) paginationSignal.setLastSignalId(null);
+        else {
+            paginationSignal.setLastSignalId(list.get(list.size()-1).getSignalId());
+        }
+        return paginationSignal;
+    }
 
 
 

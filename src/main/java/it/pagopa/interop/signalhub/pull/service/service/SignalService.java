@@ -5,6 +5,6 @@ import reactor.core.publisher.Flux;
 
 public interface SignalService {
 
-    Flux<Signal> pullSignal(String consumerId, String eServiceId, Long indexSignal );
+    Flux<Signal> pullSignal(String consumerId, String eServiceId, Long SignalId, Long size );
 
 }

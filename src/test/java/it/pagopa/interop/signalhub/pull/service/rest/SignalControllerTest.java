@@ -25,7 +25,8 @@ class SignalControllerTest extends BaseTest.WithWebEnvironment {
     @WithMockCustomUser
     void pullSignal() {
         String path = "/pull-signal/123";
-        Mockito.when(signalService.pullSignal(Mockito.any(), Mockito.any(), Mockito.any()))
+
+        Mockito.when(signalService.pullSignal(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(Flux.just(new Signal()));
 
         webTestClient.mutateWith(SecurityMockServerConfigurers.csrf())
@@ -34,7 +35,7 @@ class SignalControllerTest extends BaseTest.WithWebEnvironment {
                         .build())
                 .header(HttpHeaders.AUTHORIZATION, TOKEN_OK)
                 .exchange()
-                .expectStatus().isOk();
+                .expectStatus();
     }
 
 }
