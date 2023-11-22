@@ -9,6 +9,7 @@ import org.springframework.data.relational.core.mapping.Column;
 import org.springframework.data.relational.core.mapping.Table;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -45,4 +46,16 @@ public class EService {
     @Column(COLUMN_DATE_UPDATE)
     private Timestamp tmstLastEdit;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        EService eService = (EService) o;
+        return Objects.equals(eserviceId, eService.eserviceId) && Objects.equals(producerId, eService.producerId) && Objects.equals(descriptorId, eService.descriptorId) && Objects.equals(state, eService.state) && Objects.equals(eventId, eService.eventId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(eserviceId, producerId, descriptorId, state, eventId);
+    }
 }

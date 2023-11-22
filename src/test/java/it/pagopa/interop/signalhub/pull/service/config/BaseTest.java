@@ -19,7 +19,7 @@ import org.springframework.test.context.ActiveProfiles;
 @Import(LocalStackTestConfig.class)
 public class BaseTest {
 
-    @ActiveProfiles("test")
+    @ActiveProfiles("test-db")
     @DataR2dbcTest
     public static class WithR2DBC { }
 

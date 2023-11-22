@@ -13,18 +13,12 @@ import java.time.Instant;
 import java.util.List;
 
 class EServiceRepositoryImplTest extends BaseTest.WithR2DBC {
-    private static final String correctEservice = "1234";
-    private static final String correctDescriptor = "1234";
+    private static final String correctEservice = "BC-eservice";
+    private static final String correctDescriptor = "BC-descriptor";
     private static final String correctState = "PUBLISHED";
-    private static final String incorrectState = "ACTIVE";
-
+    private static final String incorrectState = "SUSPENDED";
     @Autowired
     private EServiceRepository eServiceRepository;
-
-    @BeforeEach
-    void setUp(){
-        eServiceRepository.save(getEntity());
-    }
 
     @Test
     void whenFindOrganizationWithBadlyParamThenReturnNull(){
@@ -33,21 +27,19 @@ class EServiceRepositoryImplTest extends BaseTest.WithR2DBC {
                         correctEservice,
                         correctDescriptor,
                         incorrectState).collectList().block();
-
+        Assertions.assertNotNull(entity);
         Assertions.assertTrue(entity.isEmpty());
     }
 
 
     @Test
     void whenFindOrganizationWithCorrectParamThenReturnEntity(){
-        eServiceRepository.save(getEntity()).block();
-        Assertions.assertFalse(eServiceRepository.findAll().collectList().block().isEmpty());
         List<EService> entity =
                 eServiceRepository.checkEServiceStatus(
                         correctEservice,
                         correctDescriptor,
                         correctState).collectList().block();
-
+        Assertions.assertNotNull(entity);
         Assertions.assertFalse(entity.isEmpty());
         Assertions.assertEquals(entity.get(0), getEntity());
     }
@@ -56,10 +48,11 @@ class EServiceRepositoryImplTest extends BaseTest.WithR2DBC {
     private EService getEntity(){
         EService entity = new EService();
         entity.setEserviceId(correctEservice);
-        entity.setProducerId(correctDescriptor);
-        entity.setState("published");
-        entity.setTmstInsert(Timestamp.valueOf("2020-01-01 00:00:00"));
-        entity.setTmstLastEdit(Timestamp.valueOf("2020-01-01 00:00:00"));
+        entity.setProducerId("BC-producer");
+        entity.setState(correctState);
+        entity.setEventId(12L);
+        entity.setDescriptorId(correctDescriptor);
+
         return entity;
     }
 

@@ -3,28 +3,21 @@ package it.pagopa.interop.signalhub.pull.service.repository;
 import it.pagopa.interop.signalhub.pull.service.config.BaseTest;
 import it.pagopa.interop.signalhub.pull.service.entities.ConsumerEService;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.sql.Timestamp;
-import java.time.Instant;
 import java.util.List;
 
 class ConsumerEServiceRepositoryImplTest extends BaseTest.WithR2DBC {
 
-    private static final String correctEservice = "1234";
-    private static final String correctConsumer = "1234";
-    private static final String correctState = "PUBLISHED";
-    private static final String incorrectState = "ACTIVE";
+    private static final String correctEservice = "BC-eservice";
+    private static final String correctConsumer = "BC-consumer";
+    private static final String correctState = "ACTIVE";
+    private static final String incorrectState = "ARCHIVED";
 
     @Autowired
     private ConsumerEServiceRepository consumerEServiceRepository;
 
-    @BeforeEach
-    void setUp(){
-        consumerEServiceRepository.save(getEntity());
-    }
 
     @Test
     void whenFindOrganizationWithBadlyParamThenReturnNull(){
@@ -33,7 +26,7 @@ class ConsumerEServiceRepositoryImplTest extends BaseTest.WithR2DBC {
                         correctEservice,
                         correctConsumer,
                         incorrectState).collectList().block();
-
+        Assertions.assertNotNull(entity);
         Assertions.assertTrue(entity.isEmpty());
     }
 
@@ -46,6 +39,7 @@ class ConsumerEServiceRepositoryImplTest extends BaseTest.WithR2DBC {
                         correctConsumer,
                         correctState).collectList().block();
 
+        Assertions.assertNotNull(entity);
         Assertions.assertFalse(entity.isEmpty());
         Assertions.assertEquals(entity.get(0), getEntity());
     }
@@ -55,8 +49,10 @@ class ConsumerEServiceRepositoryImplTest extends BaseTest.WithR2DBC {
         ConsumerEService entity = new ConsumerEService();
         entity.setEserviceId(correctEservice);
         entity.setConsumerId(correctConsumer);
+        entity.setDescriptorId("BC-descriptor");
+        entity.setEventId(12L);
+        entity.setAgreementId("BC-agreement");
         entity.setState(correctState);
-        entity.setTmstInsert(Timestamp.from(Instant.now()));
         return entity;
     }
 }

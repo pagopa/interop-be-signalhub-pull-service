@@ -10,6 +10,7 @@ import org.springframework.data.relational.core.mapping.Table;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Getter
 @Setter
@@ -50,4 +51,16 @@ public class ConsumerEService implements Serializable {
     @Column(COLUMN_DATE_UPDATE)
     private Timestamp tmstLastEdit;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ConsumerEService that = (ConsumerEService) o;
+        return Objects.equals(eserviceId, that.eserviceId) && Objects.equals(consumerId, that.consumerId) && Objects.equals(descriptorId, that.descriptorId) && Objects.equals(eventId, that.eventId) && Objects.equals(agreementId, that.agreementId) && Objects.equals(state, that.state);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(eserviceId, consumerId, descriptorId, eventId, agreementId, state);
+    }
 }
