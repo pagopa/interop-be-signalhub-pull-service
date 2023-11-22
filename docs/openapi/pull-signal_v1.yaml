@@ -32,7 +32,7 @@ paths:
       tags:
         - gateway
       summary: Get a list of signals
-      description: Retrieve a list o signals on a specific eservice starting from indexSignal
+      description: Retrieve a list o signals on a specific eservice starting from signalId
       operationId: getRequest
       security:
         - bearerAuth: []
@@ -43,9 +43,9 @@ paths:
           required: true
           schema:
             type: string
-        - name: indexSignal
+        - name: signalId
           in: query
-          description: signal index from which to search
+          description: signalId from which to search
           required: true
           schema:
             type: integer
@@ -229,9 +229,6 @@ components:
           type: string
           description: eservice Id
         signalId:
-          type: string
-          description: signal id
-        indexSignal:
           type: integer
           description: sorting signal index
           format: int64
@@ -244,7 +241,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Signal'
-        lastIndexSignal:
+        lastSignalId:
           type: integer
           format: int64
 
