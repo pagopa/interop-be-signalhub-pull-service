@@ -23,7 +23,7 @@ import reactor.test.StepVerifier;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class SignalServiceImplTest {
+class SignalServiceImplTest {
     @InjectMocks
     private SignalServiceImpl signalService;
 
