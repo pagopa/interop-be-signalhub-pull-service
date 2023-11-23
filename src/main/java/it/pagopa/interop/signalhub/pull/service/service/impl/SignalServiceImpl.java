@@ -1,5 +1,6 @@
 package it.pagopa.interop.signalhub.pull.service.service.impl;
 
+import com.nimbusds.jose.util.Pair;
 import it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum;
 import it.pagopa.interop.signalhub.pull.service.exception.PDNDGenericException;
 import it.pagopa.interop.signalhub.pull.service.mapper.SignalMapper;
@@ -10,6 +11,7 @@ import it.pagopa.interop.signalhub.pull.service.service.OrganizationService;
 import it.pagopa.interop.signalhub.pull.service.service.SignalService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.connection.zset.Tuple;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -32,11 +34,16 @@ public class SignalServiceImpl implements SignalService {
         long start = finalSignalId+1;
         long end = finalSignalId+size;
         return consumerService.getConsumerEservice(eServiceId, consumerId)
-                .switchIfEmpty(Mono.error(new PDNDGenericException(ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND, ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND.getMessage().concat(eServiceId), HttpStatus.FORBIDDEN)))
+                .switchIfEmpty(Mono.error(new PDNDGenericException(ExceptionTypeEnum.UNAUTHORIZED, ExceptionTypeEnum.UNAUTHORIZED.getMessage().concat(eServiceId), HttpStatus.FORBIDDEN)))
                 .flatMap(consumerEService -> organizationService.getEService(eServiceId, consumerEService.getDescriptorId()))
                 .doOnNext(eService -> log.info("Searching signals from {} to {}", start, end))
                 .flatMapMany(eservice -> signalRepository.findSignal(eServiceId, start, end))
                 .map(signalMapper::toDto);
+    }
+
+    public Mono<Integer> counter(String eServiceId){
+        return signalRepository.countAllSignal(eServiceId);
+
     }
 
 

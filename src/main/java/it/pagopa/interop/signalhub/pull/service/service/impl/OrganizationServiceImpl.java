@@ -17,8 +17,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 
-import static it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum.ESERVICE_NOT_FOUND;
-import static it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum.ESERVICE_STATUS_IS_NOT_PUBLISHED;
+import static it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum.*;
 import static org.springframework.data.relational.core.query.Criteria.where;
 
 
@@ -38,7 +37,7 @@ public class OrganizationServiceImpl implements OrganizationService {
                 .doOnNext(cache -> log.info("[{}-{}] EService in cache", eserviceId, descriptorId))
                 .flatMap(eServiceCache -> {
                     if(eServiceCache.getState().equalsIgnoreCase(Const.STATE_PUBLISHED)) return Mono.just(eServiceCache);
-                    return Mono.error(new PDNDGenericException(ESERVICE_STATUS_IS_NOT_PUBLISHED, ESERVICE_STATUS_IS_NOT_PUBLISHED.getMessage().concat(eserviceId), HttpStatus.FORBIDDEN));
+                    return Mono.error(new PDNDGenericException(UNAUTHORIZED, UNAUTHORIZED.getMessage().concat(eserviceId), HttpStatus.FORBIDDEN));
                 })
                 .switchIfEmpty(Mono.defer(() -> {
                     log.info("[{}-{}] EService no in cache",  eserviceId, descriptorId);
@@ -54,7 +53,7 @@ public class OrganizationServiceImpl implements OrganizationService {
         return this.eServiceRepository.checkEServiceStatus(eserviceId, descriptorId, Const.STATE_PUBLISHED)
                 .switchIfEmpty(Mono.defer(()-> {
                     log.info("[{}-{}] EService not founded into DB",  eserviceId, descriptorId);
-                    return Mono.error(new PDNDGenericException(ESERVICE_NOT_FOUND, ESERVICE_NOT_FOUND.getMessage().concat(eserviceId), HttpStatus.FORBIDDEN));
+                    return Mono.error(new PDNDGenericException(UNAUTHORIZED, UNAUTHORIZED.getMessage().concat(eserviceId), HttpStatus.FORBIDDEN));
                 }))
                 .doOnNext(entity ->
                         log.info("[{}-{}] EService founded into DB",  eserviceId, descriptorId)

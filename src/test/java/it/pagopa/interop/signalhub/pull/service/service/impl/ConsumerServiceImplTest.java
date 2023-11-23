@@ -44,7 +44,7 @@ class ConsumerServiceImplTest {
         StepVerifier.create(consumerService.getConsumerEservice("1234","1234"))
                 .expectErrorMatches((ex) -> {
                     assertTrue(ex instanceof PDNDGenericException);
-                    assertEquals(ExceptionTypeEnum.CONSUMER_ESERVICE_NOT_FOUND,((PDNDGenericException) ex).getExceptionType());
+                    assertEquals(ExceptionTypeEnum.UNAUTHORIZED,((PDNDGenericException) ex).getExceptionType());
                     return true;
 
                 }).verify();
@@ -71,7 +71,7 @@ class ConsumerServiceImplTest {
         StepVerifier.create(consumerService.getConsumerEservice("1234","1234"))
                 .expectErrorMatches((ex) -> {
                     assertTrue(ex instanceof PDNDGenericException);
-                    assertEquals(ExceptionTypeEnum.CONSUMER_STATUS_IS_NOT_ACTIVE,((PDNDGenericException) ex).getExceptionType());
+                    assertEquals(ExceptionTypeEnum.UNAUTHORIZED,((PDNDGenericException) ex).getExceptionType());
                     return true;
 
                 }).verify();

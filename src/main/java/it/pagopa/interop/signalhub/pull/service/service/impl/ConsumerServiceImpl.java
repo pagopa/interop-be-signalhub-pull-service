@@ -32,7 +32,7 @@ public class ConsumerServiceImpl implements ConsumerService {
                 .doOnNext(cache -> log.info("[{}-{}] ConsumerEService in cache", consumerId, eserviceId))
                 .flatMap(eServiceCache -> {
                     if(eServiceCache.getState().equalsIgnoreCase(Const.STATE_ACTIVE)) return Mono.just(eServiceCache);
-                    return Mono.error(new PDNDGenericException(CONSUMER_STATUS_IS_NOT_ACTIVE, CONSUMER_STATUS_IS_NOT_ACTIVE.getMessage().concat(eserviceId), HttpStatus.FORBIDDEN));
+                    return Mono.error(new PDNDGenericException(UNAUTHORIZED, UNAUTHORIZED.getMessage().concat(eserviceId), HttpStatus.FORBIDDEN));
                 })
                 .switchIfEmpty(Mono.defer(() -> {
                     log.info("[{}-{}] ConsumerEService no in cache", consumerId, eserviceId);
@@ -47,7 +47,7 @@ public class ConsumerServiceImpl implements ConsumerService {
         return this.consumerEServiceRepository.findByConsumerIdAndEServiceIdAndState(eserviceId,consumerId, Const.STATE_ACTIVE)
                 .switchIfEmpty(Mono.defer(()-> {
                     log.info("[{}-{}] ConsumerEService not founded into DB", consumerId, eserviceId);
-                    return Mono.error(new PDNDGenericException(CONSUMER_ESERVICE_NOT_FOUND, CONSUMER_ESERVICE_NOT_FOUND.getMessage().concat(eserviceId), HttpStatus.FORBIDDEN));
+                    return Mono.error(new PDNDGenericException(UNAUTHORIZED, UNAUTHORIZED.getMessage().concat(eserviceId), HttpStatus.FORBIDDEN));
                 }))
                 .doOnNext(entity ->
                         log.info("[{}-{}] ConsumerEService founded into DB", consumerId, eserviceId)

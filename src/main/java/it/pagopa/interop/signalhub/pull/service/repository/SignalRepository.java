@@ -5,6 +5,7 @@ import org.springframework.data.r2dbc.repository.Query;
 import org.springframework.data.repository.reactive.ReactiveCrudRepository;
 import org.springframework.stereotype.Repository;
 import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
 
 @Repository
 public interface SignalRepository extends ReactiveCrudRepository<SignalEntity, Long> {
@@ -12,6 +13,9 @@ public interface SignalRepository extends ReactiveCrudRepository<SignalEntity, L
     @Query("select * from signal s where s.eservice_id= :eserviceId and s.signal_id BETWEEN :signalIdStart AND :signalIdEnd " +
             "order by s.signal_id")
     Flux<SignalEntity> findSignal(String eserviceId, Long signalIdStart, Long signalIdEnd);
+
+    @Query("select count (*) from signal s where s.eservice_id= :eserviceId")
+    Mono<Integer> countAllSignal(String eserviceId);
 
 }
 

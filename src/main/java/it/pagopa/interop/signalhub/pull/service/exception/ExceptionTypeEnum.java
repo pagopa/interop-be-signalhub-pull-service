@@ -13,12 +13,7 @@ public enum ExceptionTypeEnum {
     DETAIL_AGREEMENT_ERROR("DETAIL_AGREEMENT_ERROR", "Si è verificato un errore durante il recupero del dettaglio del purpose"),
     AGREEMENT_NOT_VALID("AGREEMENT_NOT_VALID", "Non si dispone delle autorizzazioni necessarie per utilizzare il sistema"),
     JWT_PARSER_ERROR("JWT_PARSER_ERROR", "Non è stato possibile decodificare il voucher."),
-
-    CORRESPONDENCE_NOT_FOUND("CORRESPONDENCE_NOT_FOUND", "Non risulta corrispondenza tra l'erogatore e l'id del servizio: "),
-    ESERVICE_STATUS_IS_NOT_PUBLISHED("ESERVICE_STATUS_IS_NOT_PUBLISHED", "Lo stato del servizio è diverso da PUBLISHED. EServiceId: "),
-    CONSUMER_STATUS_IS_NOT_ACTIVE("CONSUMER_STATUS_IS_NOT_ACTIVE", "Lo stato del consumer eservice è diverso da ACTIVE. EServiceId: "),
-    ESERVICE_NOT_FOUND("ESERVICE_NOT_FOUND", "L'eservice non è presente a sistema - eserviceId: "),
-    CONSUMER_ESERVICE_NOT_FOUND("CONSUMER_ESERVICE_NOT_FOUND", "Il consumer eservice non è presente a sistema - eserviceId: "),
+    UNAUTHORIZED("NOT_AUTHORIZED", "User not authorized"),
     SIGNALID_ALREADY_EXISTS("SIGNALID_NOT_EXISTS", "non esiste nessun segnale per il signalId selezionato");
 
     private final String title;

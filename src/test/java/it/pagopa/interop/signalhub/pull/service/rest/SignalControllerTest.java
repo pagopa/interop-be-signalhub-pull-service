@@ -12,7 +12,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import reactor.core.publisher.Flux;
-
+import reactor.core.publisher.Mono;
 
 
 class SignalControllerTest extends BaseTest.WithWebEnvironment {
@@ -28,6 +28,8 @@ class SignalControllerTest extends BaseTest.WithWebEnvironment {
 
         Mockito.when(signalService.pullSignal(Mockito.any(), Mockito.any(), Mockito.any(), Mockito.any()))
                 .thenReturn(Flux.just(new Signal()));
+        Mockito.when(signalService.counter(Mockito.any()))
+                .thenReturn(Mono.just(1));
 
         webTestClient.mutateWith(SecurityMockServerConfigurers.csrf())
                 .get()

@@ -30,15 +30,18 @@ public class SignalController implements GatewayApi {
     public Mono<ResponseEntity<PaginationSignal>> getRequest(String eserviceId, Long signalId, Long size, ServerWebExchange exchange) {
 
         final Long finalSize = (size == 0 || size > signalHubPullConfig.getMaxNumberPage()) ? signalHubPullConfig.getMaxNumberPage() : size;
-        final HttpStatus finalStatus = size > signalHubPullConfig.getMaxNumberPage() ? HttpStatus.PARTIAL_CONTENT : HttpStatus.OK;
 
         return Utility.getPrincipalFromSecurityContext()
                 .switchIfEmpty(Mono.error(new PDNDGenericException(NO_AUTH_FOUNDED, NO_AUTH_FOUNDED.getMessage(), HttpStatus.UNAUTHORIZED)))
-                .flatMapMany(principalAgreement -> this.signalService.pullSignal(principalAgreement.getPrincipalId(), eserviceId, signalId, finalSize))
-                .collectList()
-                .map(list -> ResponseEntity.status(finalStatus)
-                            .body(toPagination(list))
-                );
+                .zipWhen(principalAgreement -> this.signalService.counter(eserviceId))
+                .flatMap(principalAndCounter -> {
+                    var principal= principalAndCounter.getT1();
+                    var finalStatus = finalSize < principalAndCounter.getT2() ? HttpStatus.PARTIAL_CONTENT : HttpStatus.OK;
+                    return this.signalService.pullSignal(principal.getPrincipalId(), eserviceId, signalId, finalSize)
+                            .collectList()
+                            .map(list -> ResponseEntity.status(finalStatus)
+                                    .body(toPagination(list)));
+                });
     }
 
 

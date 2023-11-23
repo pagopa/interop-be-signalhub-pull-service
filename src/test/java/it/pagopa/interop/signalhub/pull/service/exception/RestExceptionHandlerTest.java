@@ -4,9 +4,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Spy;
+import org.springframework.http.HttpStatus;
 import reactor.core.publisher.Mono;
 
-import static it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum.CORRESPONDENCE_NOT_FOUND;
+import static it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum.UNAUTHORIZED;
 
 
 class RestExceptionHandlerTest {
@@ -21,11 +22,11 @@ class RestExceptionHandlerTest {
 
     @Test
     void handleResponseEntityExceptionTest(){
-        PDNDGenericException pnGenericException = new PDNDGenericException(CORRESPONDENCE_NOT_FOUND, CORRESPONDENCE_NOT_FOUND.getMessage());
+        PDNDGenericException pnGenericException = new PDNDGenericException(UNAUTHORIZED, UNAUTHORIZED.getMessage());
         restExceptionHandler.handleResponseEntityException(pnGenericException)
                 .map(responseEntity -> {
-                    Assertions.assertEquals(CORRESPONDENCE_NOT_FOUND.getTitle(), responseEntity.getBody().getTitle());
-                    Assertions.assertEquals(CORRESPONDENCE_NOT_FOUND.getMessage(), responseEntity.getBody().getDetail());
+                    Assertions.assertEquals(HttpStatus.FORBIDDEN.name(), responseEntity.getBody().getTitle());
+                    Assertions.assertEquals(HttpStatus.valueOf(HttpStatus.FORBIDDEN.value()).getReasonPhrase(), responseEntity.getBody().getDetail());
                     return Mono.empty();
                 })
                 .block();

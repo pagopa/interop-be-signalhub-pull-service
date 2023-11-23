@@ -1,6 +1,5 @@
 package it.pagopa.interop.signalhub.pull.service.cache.model;
 
-import it.pagopa.interop.signalhub.pull.service.cache.model.EServiceCache;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
