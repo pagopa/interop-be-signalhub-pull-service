@@ -219,12 +219,13 @@
 				<version>0.8.10</version>
 				<configuration>
 					<excludes>
-						<exclude>it/pagopa/interop/signalhub/pull/service/rest/v1/dto/*</exclude>
-						<exclude>it/pagopa/interop/signalhub/pull/service/rest/v1/dto/**</exclude>
-						<exclude>it/pagopa/interop/signalhub/pull/service/rest/v1/api/*</exclude>
-						<exclude>it/pagopa/interop/signalhub/pull/service/rest/v1/api/**</exclude>
-						<exclude>it/pagopa/interop/signalhub/pull/service/generated/*</exclude>
-						<exclude>it/pagopa/interop/signalhub/pull/service/generated/**</exclude>
+						<exclude>**/rest/v1/dto/**</exclude>
+						<exclude>**/rest/v1/api/**</exclude>
+						<exclude>**/generated/**</exclude>
+						<exclude>**/config/**</exclude>
+						<exclude>**/utils/**</exclude>
+						<exclude>**/entities/**</exclude>
+						<exclude>**/cache/model/**</exclude>
 					</excludes>
 				</configuration>
 				<executions>
