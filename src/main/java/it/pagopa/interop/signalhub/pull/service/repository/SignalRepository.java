@@ -14,7 +14,7 @@ public interface SignalRepository extends ReactiveCrudRepository<SignalEntity, L
             "order by s.signal_id")
     Flux<SignalEntity> findSignal(String eserviceId, Long signalIdStart, Long signalIdEnd);
 
-    @Query("select max (s.signal_id) from signal s where s.eservice_id= :eserviceId" +
+    @Query("select max(s.signal_id) from signal s where s.eservice_id= :eserviceId " +
             "group by s.eservice_id")
     Mono<Integer> maxSignal(String eserviceId);
 
