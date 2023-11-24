@@ -10,6 +10,7 @@ import it.pagopa.interop.signalhub.pull.service.repository.SignalRepository;
 import it.pagopa.interop.signalhub.pull.service.rest.v1.dto.Signal;
 import it.pagopa.interop.signalhub.pull.service.service.ConsumerService;
 import it.pagopa.interop.signalhub.pull.service.service.OrganizationService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -67,5 +68,16 @@ class SignalServiceImplTest {
         assertNotNull(signalService.pullSignal("1234","1234",1L, 1L).blockLast());
     }
 
+    @Test
+    void whenCounterReturnBiggestSignalId() {
+        Mockito.when(signalRepository.maxSignal(Mockito.any()))
+                .thenReturn(Mono.just(8));
 
+        signalService.counter(Mockito.any())
+                .flatMap(integer -> {
+                    Assertions.assertEquals(8, integer.intValue());
+                    return Mono.empty();
+                })
+                .block();
+    }
 }
