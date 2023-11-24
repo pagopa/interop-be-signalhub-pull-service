@@ -226,6 +226,7 @@
 						<exclude>**/utils/**</exclude>
 						<exclude>**/entities/**</exclude>
 						<exclude>**/cache/model/**</exclude>
+						<exclude>**/SignalHubPullServiceApplication.class</exclude>
 					</excludes>
 				</configuration>
 				<executions>
