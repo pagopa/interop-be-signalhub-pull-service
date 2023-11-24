@@ -36,19 +36,19 @@ public class SignalController implements GatewayApi {
                 .zipWhen(principalAgreement -> this.signalService.counter(eserviceId))
                 .flatMap(principalAndCounter -> {
                     var principal= principalAndCounter.getT1();
-                    var finalStatus = finalSize < principalAndCounter.getT2() ? HttpStatus.PARTIAL_CONTENT : HttpStatus.OK;
+                    var finalStatus = (finalSize+signalId) < principalAndCounter.getT2() ? HttpStatus.PARTIAL_CONTENT : HttpStatus.OK;
                     return this.signalService.pullSignal(principal.getPrincipalId(), eserviceId, signalId, finalSize)
                             .collectList()
                             .map(list -> ResponseEntity.status(finalStatus)
-                                    .body(toPagination(list)));
+                                    .body(toPagination(list, principalAndCounter.getT2())));
                 });
     }
 
 
-    private PaginationSignal toPagination(List<Signal> list) {
+    private PaginationSignal toPagination(List<Signal> list, Integer maxSignalId ) {
         PaginationSignal paginationSignal = new PaginationSignal();
         paginationSignal.setSignals(list);
-        if (list == null || list.isEmpty()) paginationSignal.setLastSignalId(null);
+        if (list == null || list.isEmpty()) paginationSignal.setLastSignalId(maxSignalId.longValue()-1);
         else {
             paginationSignal.setLastSignalId(list.get(list.size()-1).getSignalId());
         }
