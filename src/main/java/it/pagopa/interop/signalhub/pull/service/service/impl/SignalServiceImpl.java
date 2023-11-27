@@ -28,19 +28,17 @@ public class SignalServiceImpl implements SignalService {
 
     @Override
     public Flux<Signal> pullSignal(String consumerId, String eServiceId, Long signalId, Long size) {
-        long finalSignalId = signalId;
-        long start = finalSignalId+1;
-        long end = finalSignalId+size;
+        long start = signalId+1;
         return consumerService.getConsumerEservice(eServiceId, consumerId)
                 .switchIfEmpty(Mono.error(new PDNDGenericException(ExceptionTypeEnum.UNAUTHORIZED, ExceptionTypeEnum.UNAUTHORIZED.getMessage().concat(eServiceId), HttpStatus.FORBIDDEN)))
                 .flatMap(consumerEService -> organizationService.getEService(eServiceId, consumerEService.getDescriptorId()))
-                .doOnNext(eService -> log.info("Searching signals from {} to {}", start, end))
-                .flatMapMany(eservice -> signalRepository.findSignal(eServiceId, start, end))
+                .doOnNext(eService -> log.info("Searching signals from {} to {}", start, size))
+                .flatMapMany(eservice -> signalRepository.findSignal(eServiceId, start, size))
                 .map(signalMapper::toDto);
     }
 
     public Mono<Integer> counter(String eServiceId){
-        return signalRepository.maxSignal(eServiceId);
+        return signalRepository.countAllSignal(eServiceId);
 
     }
 

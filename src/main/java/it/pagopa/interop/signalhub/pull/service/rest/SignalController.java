@@ -40,15 +40,15 @@ public class SignalController implements GatewayApi {
                     return this.signalService.pullSignal(principal.getPrincipalId(), eserviceId, signalId, finalSize)
                             .collectList()
                             .map(list -> ResponseEntity.status(finalStatus)
-                                    .body(toPagination(list, principalAndCounter.getT2())));
+                                    .body(toPagination(list)));
                 });
     }
 
 
-    private PaginationSignal toPagination(List<Signal> list, Integer maxSignalId ) {
+    private PaginationSignal toPagination(List<Signal> list) {
         PaginationSignal paginationSignal = new PaginationSignal();
         paginationSignal.setSignals(list);
-        if (list == null || list.isEmpty()) paginationSignal.setLastSignalId(maxSignalId.longValue()-1);
+        if (list == null || list.isEmpty()) paginationSignal.setLastSignalId(null);
         else {
             paginationSignal.setLastSignalId(list.get(list.size()-1).getSignalId());
         }

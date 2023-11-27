@@ -10,13 +10,12 @@ import reactor.core.publisher.Mono;
 @Repository
 public interface SignalRepository extends ReactiveCrudRepository<SignalEntity, Long> {
 
-    @Query("select * from signal s where s.eservice_id= :eserviceId and s.signal_id BETWEEN :signalIdStart AND :signalIdEnd " +
-            "order by s.signal_id")
-    Flux<SignalEntity> findSignal(String eserviceId, Long signalIdStart, Long signalIdEnd);
+    @Query("select * from signal s where s.eservice_id= :eserviceId and s.signal_id >= :signalIdStart " +
+            "order by s.signal_id  limit :size")
+    Flux<SignalEntity> findSignal(String eserviceId, Long signalIdStart, Long size);
 
-    @Query("select max(s.signal_id) from signal s where s.eservice_id= :eserviceId " +
-            "group by s.eservice_id")
-    Mono<Integer> maxSignal(String eserviceId);
+    @Query("select count (*) from signal s where s.eservice_id= :eserviceId")
+    Mono<Integer> countAllSignal(String eserviceId);
 
 }
 
