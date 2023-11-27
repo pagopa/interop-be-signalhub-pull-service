@@ -14,6 +14,7 @@ public enum ExceptionTypeEnum {
     AGREEMENT_NOT_VALID("AGREEMENT_NOT_VALID", "Non si dispone delle autorizzazioni necessarie per utilizzare il sistema"),
     JWT_PARSER_ERROR("JWT_PARSER_ERROR", "Non è stato possibile decodificare il voucher."),
     UNAUTHORIZED("NOT_AUTHORIZED", "User not authorized"),
+    SIZE_NOT_VALID("SIZE_NOT_VALID", "size non può essere maggiore di 100"),
     SIGNALID_ALREADY_EXISTS("SIGNALID_NOT_EXISTS", "non esiste nessun segnale per il signalId selezionato");
 
     private final String title;

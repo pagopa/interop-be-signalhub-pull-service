@@ -17,6 +17,7 @@ import reactor.core.publisher.Mono;
 import java.util.List;
 
 import static it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum.NO_AUTH_FOUNDED;
+import static it.pagopa.interop.signalhub.pull.service.exception.ExceptionTypeEnum.SIZE_NOT_VALID;
 
 
 @RestController
@@ -28,7 +29,7 @@ public class SignalController implements GatewayApi {
 
     @Override
     public Mono<ResponseEntity<PaginationSignal>> getRequest(String eserviceId, Long signalId, Long size, ServerWebExchange exchange) {
-
+        if(size > signalHubPullConfig.getMaxNumberPage()) throw new PDNDGenericException(SIZE_NOT_VALID, SIZE_NOT_VALID.getMessage(), HttpStatus.BAD_REQUEST);
         final Long finalSize = (size == 0 || size > signalHubPullConfig.getMaxNumberPage()) ? signalHubPullConfig.getMaxNumberPage() : size;
 
         return Utility.getPrincipalFromSecurityContext()
