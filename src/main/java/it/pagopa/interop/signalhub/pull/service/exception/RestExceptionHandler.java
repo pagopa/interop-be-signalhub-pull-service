@@ -27,6 +27,7 @@ public class RestExceptionHandler {
     @ExceptionHandler(PDNDGenericException.class)
     public Mono<ResponseEntity<Problem>> handleResponseEntityException(final PDNDGenericException exception){
         log.warn(exception.toString());
+
         final Problem problem = new Problem();
         if (exception.getExceptionType() == ExceptionTypeEnum.SIGNALID_ALREADY_EXISTS) {
             problem.setTitle(HttpStatus.BAD_REQUEST.name());
