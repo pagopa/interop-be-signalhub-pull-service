@@ -29,10 +29,10 @@ public class RestExceptionHandler {
         log.warn(exception.toString());
 
         final Problem problem = new Problem();
-        if (exception.getExceptionType() == ExceptionTypeEnum.SIGNALID_ALREADY_EXISTS) {
+        if (exception.getExceptionType() == ExceptionTypeEnum.SIGNALID_ALREADY_EXISTS || exception.getExceptionType() == ExceptionTypeEnum.SIZE_NOT_VALID ) {
             problem.setTitle(HttpStatus.BAD_REQUEST.name());
             problem.setDetail(HttpStatus.valueOf(HttpStatus.BAD_REQUEST.value()).getReasonPhrase());
-        } else {
+        }else {
             problem.setTitle(HttpStatus.FORBIDDEN.name());
             problem.setDetail(HttpStatus.valueOf(HttpStatus.FORBIDDEN.value()).getReasonPhrase());
         }
