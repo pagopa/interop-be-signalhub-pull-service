@@ -18,10 +18,7 @@ public class InteroperabilityCacheRepository {
 
     public Mono<Agreement> findById(String purposeId) {
         return this.reactiveRedisOperations.opsForValue().get(purposeId)
-                .flatMap(finded -> {
-                    if (ObjectUtils.isEmpty(finded)) return Mono.empty();
-                    return Mono.just(finded);
-                });
+                .flatMap(Mono::just);
     }
 
     public Mono<Agreement> save(Agreement agreement, String purposeId){
