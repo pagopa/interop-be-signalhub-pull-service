@@ -28,8 +28,13 @@ public class RestExceptionHandler {
     public Mono<ResponseEntity<Problem>> handleResponseEntityException(final PDNDGenericException exception){
         log.warn(exception.toString());
         final Problem problem = new Problem();
-        problem.setTitle(HttpStatus.FORBIDDEN.name());
-        problem.setDetail(HttpStatus.valueOf(HttpStatus.FORBIDDEN.value()).getReasonPhrase());
+        if (exception.getExceptionType() == ExceptionTypeEnum.SIGNALID_ALREADY_EXISTS) {
+            problem.setTitle(HttpStatus.BAD_REQUEST.name());
+            problem.setDetail(HttpStatus.valueOf(HttpStatus.BAD_REQUEST.value()).getReasonPhrase());
+        } else {
+            problem.setTitle(HttpStatus.FORBIDDEN.name());
+            problem.setDetail(HttpStatus.valueOf(HttpStatus.FORBIDDEN.value()).getReasonPhrase());
+        }
         problem.setStatus(exception.getHttpStatus().value());
 
         ProblemError problemError= new ProblemError();
