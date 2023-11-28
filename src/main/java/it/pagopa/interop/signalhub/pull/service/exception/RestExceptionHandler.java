@@ -29,7 +29,7 @@ public class RestExceptionHandler {
         log.warn(exception.toString());
 
         final Problem problem = new Problem();
-        if (exception.getExceptionType() == ExceptionTypeEnum.SIGNALID_ALREADY_EXISTS || exception.getExceptionType() == ExceptionTypeEnum.SIZE_NOT_VALID ) {
+        if (exception.getExceptionType() == ExceptionTypeEnum.SIZE_NOT_VALID ) {
             problem.setTitle(HttpStatus.BAD_REQUEST.name());
             problem.setDetail(HttpStatus.valueOf(HttpStatus.BAD_REQUEST.value()).getReasonPhrase());
         }else {
