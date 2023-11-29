@@ -14,4 +14,6 @@ public class SignalHubPullConfig {
     private String id;
     private String audience;
     private Long maxNumberPage;
+    private String headerTraceIdKey;
+
 }
