@@ -1,4 +1,4 @@
-echo "### CREATE PN-SERVICE-DESK QUEUES ###"
+echo "### CREATE SIGNAL HUB QUEUES ###"
 
 queues="internal-queue"
 
