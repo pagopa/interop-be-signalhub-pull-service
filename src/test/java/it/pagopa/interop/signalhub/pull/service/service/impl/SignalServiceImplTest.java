@@ -69,8 +69,8 @@ class SignalServiceImplTest {
     }
 
     @Test
-    void whenCounterReturnBiggestSignalId() {
-        Mockito.when(signalRepository.maxSignal(Mockito.any()))
+    void whenCounterReturnAllSignalId() {
+        Mockito.when(signalRepository.countAllSignal(Mockito.any()))
                 .thenReturn(Mono.just(8));
 
         signalService.counter(Mockito.any())
