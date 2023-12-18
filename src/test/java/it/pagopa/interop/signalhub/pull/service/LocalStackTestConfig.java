@@ -37,7 +37,7 @@ public class LocalStackTestConfig {
 
     static {
         localStack.start();
-        System.setProperty("aws.endpoint-url", localStack.getEndpointOverride(DYNAMODB).toString().concat("/000000000000/"));
+        System.setProperty("aws.sqs-endpoint", localStack.getEndpointOverride(DYNAMODB).toString().concat("/000000000000/"));
         try {
             System.setProperty("aws.sharedCredentialsFile", new ClassPathResource("testcontainers/credentials").getFile().getAbsolutePath());
         } catch (IOException e) {
