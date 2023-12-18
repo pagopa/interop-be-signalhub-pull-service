@@ -6,6 +6,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.client.registration.ClientRegistration;
+import org.springframework.security.oauth2.core.AuthorizationGrantType;
 
 import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
@@ -37,6 +39,14 @@ public class BeanBuilder {
         p.setProducerId("PAGO-PA-001");
         p.setEServiceId("PN-DIGITAL-001");
         return p;
+    }
+
+    public static ClientRegistration.Builder clientCredentials() {
+        return ClientRegistration.withRegistrationId("client-credentials")
+                .tokenUri("http://test.provider.com")
+                .registrationId("client-credentials")
+                .clientId("client-id")
+                .authorizationGrantType(AuthorizationGrantType.CLIENT_CREDENTIALS);
     }
 
 }
