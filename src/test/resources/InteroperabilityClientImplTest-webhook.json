@@ -1,0 +1,82 @@
+[
+
+    {
+        "httpRequest": {
+            "path": "/1.0/purposes/9a7e5371-0832-4301-9d97-d762f703dd78/agreement",
+            "method": "GET"
+        },
+        "httpResponse": {
+            "statusCode": 200,
+            "headers": {
+                "content-type": [
+                    "application/json"
+                ]
+            },
+            "body":
+            {
+                "consumerId": "498457c9-f4de-40d2-ad84-aed23c3584fd",
+                "descriptorId": "4d1eb3ed-ab17-4f51-a8ab-314c003276af",
+                "eserviceId": "c9f46158-c3ab-4642-9614-bf97fef6bcfd",
+                "id": "9a7e5371-0832-4301-9d97-d762f703dd78",
+                "producerId": "84871fd4-2fd7-46ab-9d22-f6b452f4b3c5",
+                "state": "ARCHIVED"
+            }
+        }
+    },
+    {
+        "httpRequest": {
+            "path": "/1.0/purposes/498457c9-f4de-40d2-ad84-aed23c3584fd/agreement",
+            "method": "GET"
+        },
+        "httpResponse": {
+            "statusCode": 400,
+            "headers": {
+                "content-type": [
+                    "application/json"
+                ]
+            },
+            "body":
+            {
+                "type": "string",
+                "status": 400,
+                "title": "Service Unavailable",
+                "correlationId": "53af4f2d-0c87-41ef-a645-b726a821852b",
+                "detail": "Request took too long to complete.",
+                "errors": [
+                    {
+                        "code": "123-4567",
+                        "detail": "Parameter not valid"
+                    }
+                ]
+            }
+        }
+    },
+    {
+        "httpRequest": {
+            "path": "/1.0/purposes/1925cc0d-b65c-4a78-beca-b990b933ecf3/agreement",
+            "method": "GET"
+        },
+        "httpResponse": {
+            "statusCode": 429,
+            "headers": {
+                "content-type": [
+                    "application/json"
+                ]
+            },
+            "body":
+            {
+                "type": "string",
+                "status": 429,
+                "title": "Service Unavailable",
+                "correlationId": "53af4f2d-0c87-41ef-a645-b726a821852b",
+                "detail": "Request took too long to complete.",
+                "errors": [
+                    {
+                        "code": "123-4567",
+                        "detail": "Parameter not valid"
+                    }
+                ]
+            }
+        }
+    }
+]
