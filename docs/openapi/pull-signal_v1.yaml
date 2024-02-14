@@ -252,6 +252,7 @@ components:
         - CREATE
         - UPDATE
         - DELETE
+        - SEEDUPDATE
     Problem:
       properties:
         type:
